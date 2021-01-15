@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as info from 'systeminformation';
+import fetch from 'node-fetch'
 
 @Injectable()
 export class SysinfoService {
@@ -15,6 +16,20 @@ export class SysinfoService {
             networks: await info.networkInterfaces(),
             versions: await info.versions(),
         }
+    }
+
+    async ip() {
+        return (await fetch('https://ifconfig.me/ip', { method: 'GET' })).text()
+    }
+
+    async geoIp() {
+        const ip = await this.ip();
+
+        const { city, country, countryCode, isp, lat, lon } =
+            await (await fetch(`http://demo.ip-api.com/json/${ip}`, { method: 'GET' })).json()
+
+        return { city, country, countryCode, isp, lat, lon, ip }
+
     }
 
     async docker() {
