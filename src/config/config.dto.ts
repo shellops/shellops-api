@@ -1,11 +1,11 @@
 import { Type } from "class-transformer";
 import { IsArray, IsObject } from "class-validator";
-import { ShellConnectDto } from "../shell/shell-connect.dto";
+import { ShellConfigDto } from "../shell/shell-connect.dto";
 
 export class ConfigDto {
 
-    @Type(() => ShellConnectDto)
+    @Type(() => ShellConfigDto)
     @IsObject({ each: true })
-    connections: ShellConnectDto[] = [];
+    connections: ShellConfigDto[] = [];
 
 }

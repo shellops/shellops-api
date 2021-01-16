@@ -6,6 +6,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { AppModule } from './app.module';
 import { configureMiddlewares } from './configure-middlewares';
+import { WsAdapter } from '@nestjs/platform-ws';
 
 process.on('unhandledRejection', (e: Error) => {
   Logger.error('unhandledRejection: ' + e.message, e.stack);
@@ -22,6 +23,9 @@ export async function bootstrap() {
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {});
 
+  app.useWebSocketAdapter(new WsAdapter(app) as any);
+
+  
   configureMiddlewares(app);
 
   app.enableShutdownHooks();

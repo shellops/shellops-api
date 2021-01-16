@@ -5,8 +5,10 @@ import { SysinfoService } from './sysinfo.service';
 import * as svgMap from 'svg-world-map';
 import * as domStringify from 'virtual-dom-stringify';
 import { Response } from 'express';
+import { ApiTags } from '@nestjs/swagger';
 
 @Controller()
+@ApiTags('SysInfo')
 export class SysinfoController {
 
     constructor(private readonly sysInfoService: SysinfoService) {

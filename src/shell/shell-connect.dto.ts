@@ -1,6 +1,6 @@
 import { IsNumber, IsOptional, IsString } from "class-validator"
 
-export class ShellConnectDto {
+export class ShellConfigDto {
 
     @IsString()
     password: string;

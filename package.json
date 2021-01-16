@@ -25,10 +25,13 @@
     "@nestjs/common": "^7.5.1",
     "@nestjs/core": "^7.5.1",
     "@nestjs/platform-express": "^7.5.1",
+    "@nestjs/platform-ws": "^7.6.5",
     "@nestjs/swagger": "^4.7.11",
+    "@nestjs/websockets": "^7.6.5",
     "class-transformer": "^0.3.2",
     "class-validator": "^0.13.1",
     "compression": "^1.7.4",
+    "config": "^3.3.3",
     "fs-extra": "^9.0.1",
     "get-port": "^5.1.1",
     "helmet": "^4.3.1",
@@ -41,7 +44,9 @@
     "swagger-ui-express": "^4.1.6",
     "systeminformation": "^4.34.7",
     "tunnel-ssh": "^4.1.4",
-    "virtual-dom-stringify": "^3.0.1"
+    "uuid": "^8.3.2",
+    "virtual-dom-stringify": "^3.0.1",
+    "ws": "^7.4.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.5.1",
@@ -54,6 +59,8 @@
     "@types/node-fetch": "^2.5.8",
     "@types/ssh2": "^0.5.46",
     "@types/supertest": "^2.0.10",
+    "@types/uuid": "^8.3.0",
+    "@types/ws": "^7.4.0",
     "@typescript-eslint/eslint-plugin": "^4.6.1",
     "@typescript-eslint/parser": "^4.6.1",
     "eslint": "^7.12.1",

@@ -6,9 +6,10 @@ import { ShellModule } from './shell/shell.module';
 import { FtpModule } from './ftp/ftp.module';
 import { NodeModule } from './node/node.module';
 import { ConfigModule } from './config/config.module';
+import { WsModule } from './ws/ws.module';
 
 @Module({
-  imports: [SysinfoModule, ShellModule, FtpModule, NodeModule, ConfigModule],
+  imports: [SysinfoModule, ShellModule, FtpModule, NodeModule, ConfigModule, WsModule],
   controllers: [AppController],
   providers: [AppService],
 })
