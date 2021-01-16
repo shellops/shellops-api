@@ -1,9 +1,12 @@
 import { Module } from '@nestjs/common';
-import { SysinfoService } from './sysinfo.service';
+
+import { ConfigModule } from '../config/config.module';
 import { SysinfoController } from './sysinfo.controller';
+import { SysinfoService } from './sysinfo.service';
 
 @Module({
   providers: [SysinfoService],
-  controllers: [SysinfoController]
+  controllers: [SysinfoController],
+  imports: [ConfigModule]
 })
-export class SysinfoModule {}
+export class SysinfoModule { }

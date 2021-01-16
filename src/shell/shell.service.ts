@@ -1,5 +1,5 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
-import { trim, trimEnd } from 'lodash';
+import { trim } from 'lodash';
 import { NodeSSH } from 'node-ssh';
 import { stringify } from 'querystring';
 
@@ -26,9 +26,9 @@ export class SshExtended extends NodeSSH {
 @Injectable()
 export class ShellService implements OnModuleInit {
 
-    constructor(private readonly configService: ConfigService, private readonly wsGateway: WsGateway) {
-
-    }
+    constructor(
+        private readonly configService: ConfigService,
+        private readonly wsGateway: WsGateway) { }
 
 
     async onModuleInit() {
@@ -87,13 +87,13 @@ export class ShellService implements OnModuleInit {
     async dockerIsInstalled(client: SshExtended): Promise<{ isInstalled: boolean, version: string }> {
         const result = await this.runCommand('docker -v', client);
 
-        return { isInstalled: result.outputs[0]?.startsWith('v') || false, version: result.outputs[0]?.slice(1) }
+        return { isInstalled: result.outputs[0]?.startsWith('v') || false, version: result.outputs[0] }
     }
 
     async nodeIsInstalled(client: SshExtended): Promise<{ isInstalled: boolean, version: string }> {
         const result = await this.runCommand('node -v', client);
 
-        return { isInstalled: result.outputs[0]?.startsWith('v') || false, version: result.outputs[0]?.slice(1) }
+        return { isInstalled: result.outputs[0]?.startsWith('v') || false, version: result.outputs[0] }
     }
 
     async npmIsInstalled(client: SshExtended): Promise<{ isInstalled: boolean, version: string }> {
@@ -120,25 +120,15 @@ export class ShellService implements OnModuleInit {
 
         await this.runCommand('rimraf ~/shellops-api', client);
 
+        await this.runCommand('rimraf ~/.shellops.json', client);
+
         await this.runCommand('git clone https://github.com/shellops/shellops-api.git ~/shellops-api', client);
 
         await this.runCommand('cd ~/shellops-api && npm i --no-audit --prefer-offline --no-progress', client);
 
-        await this.runCommand('cd ~/shellops-api && npm run build && npm run start:prod', client);
-        await this.runCommand('cd ~/shellops-api && npm run start:prod', client, {
-            onStdout: (chunk) => {
-                if (chunk.includes('Http server is listening')) {
+        await this.runCommand('cd ~/shellops-api && npm run build', client);
 
-                    client.connection.forwardOut('127.0.0.1', 3001, '127.0.0.1', 3000, (err, port) => {
-                        if (err)
-                            Logger.error(err.message, err.stack, 'ShellService > forwardOut')
-                        else
-                            Logger.verbose(`FORWARDOUT(${client.config.host}) -> Binded on ${port} `)
-                    });
-                }
-            }
-        });
-
+        await this.runCommand('cd ~/shellops-api && npm run start:prod', client);
 
     }
 

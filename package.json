@@ -41,6 +41,7 @@
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.3",
+    "ssh2": "^0.8.9",
     "svg-world-map": "^1.0.1",
     "swagger-ui-express": "^4.1.6",
     "systeminformation": "^4.34.7",
