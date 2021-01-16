@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { NodeSSH as ssh } from 'node-ssh';
 import { ShellCommandResultDto } from './shell-command-result.dto';
+import { ShellConnectDto } from './shell-connect.dto';
 
 @Injectable()
 export class ShellService {
 
-    async createAndConnectClient({ username, password, host, port }) {
+    async createAndConnectClient({ username, password, host, port } : ShellConnectDto) {
 
         const client = new ssh();
 
