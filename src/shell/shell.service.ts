@@ -32,7 +32,7 @@ export class ShellService implements OnModuleInit {
 
     async onModuleInit() {
 
-        Promise.all(this.configService.config.connections.map(async conn => {
+        Promise.all(this.configService.config.nodes.map(async conn => {
 
             try {
 

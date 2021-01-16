@@ -13,7 +13,7 @@ export class NodeService {
 
 
     listNodes() {
-        return this.configService.config.connections
+        return this.configService.config.nodes
     }
 
     async addNode(dto: ShellConfigDto) {
@@ -28,7 +28,7 @@ export class NodeService {
             throw new BadRequestException(error.message);
         }
 
-        this.configService.config.connections.push(dto);
+        this.configService.config.nodes.push(dto);
         this.configService.saveConfig();
 
     }
