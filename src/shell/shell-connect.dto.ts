@@ -2,6 +2,8 @@ import { IsNumber, IsOptional, IsString } from "class-validator"
 
 export class ShellConfigDto {
 
+    index?: number;
+
     @IsString()
     password: string;
 

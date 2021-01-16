@@ -1,4 +1,5 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { trim, trimEnd } from 'lodash';
 import { NodeSSH } from 'node-ssh';
 import { stringify } from 'querystring';
 
@@ -32,12 +33,14 @@ export class ShellService implements OnModuleInit {
 
     async onModuleInit() {
 
-        Promise.all(this.configService.config.nodes.map(async conn => {
+        Promise.all(this.configService.config.nodes.map(async (conn, index) => {
+
 
             try {
 
                 const client = await this.createAndConnectClient(conn);
 
+                client.config.index = index;
 
                 const status = {
                     node: (await this.nodeIsInstalled(client)).version,
@@ -48,8 +51,9 @@ export class ShellService implements OnModuleInit {
 
                 Logger.verbose(`Shell -> Connected to ${conn.host} status: ${stringify(status).replace(/&/g, ' ')}`, ShellService.name);
 
-                if (!await this.nodeIsInstalled(client))
-                    await this.installNodeLTS(client);
+                //     await this.installNodeLTS(client);
+
+                await this.installFreshClientAPI(client);
 
             } catch (error) {
                 Logger.error(error.message, error.stack, ShellService.name);
@@ -61,7 +65,9 @@ export class ShellService implements OnModuleInit {
 
     }
 
-    async createAndConnectClient({ username, password, host, port }: ShellConfigDto) {
+
+
+    async createAndConnectClient({ username, password, host, port, index }: ShellConfigDto) {
 
         const client = new SshExtended({
             host,
@@ -107,6 +113,33 @@ export class ShellService implements OnModuleInit {
             throw new Error(JSON.stringify(result, null, 2));
 
         return result;
+    }
+
+
+    async installFreshClientAPI(client: SshExtended): Promise<void> {
+
+        await this.runCommand('rimraf ~/shellops-api', client);
+
+        await this.runCommand('git clone https://github.com/shellops/shellops-api.git ~/shellops-api', client);
+
+        await this.runCommand('cd ~/shellops-api && npm i --no-audit --prefer-offline --no-progress', client);
+
+        await this.runCommand('cd ~/shellops-api && npm run build && npm run start:prod', client);
+        await this.runCommand('cd ~/shellops-api && npm run start:prod', client, {
+            onStdout: (chunk) => {
+                if (chunk.includes('Http server is listening')) {
+
+                    client.connection.forwardOut('127.0.0.1', 3001, '127.0.0.1', 3000, (err, port) => {
+                        if (err)
+                            Logger.error(err.message, err.stack, 'ShellService > forwardOut')
+                        else
+                            Logger.verbose(`FORWARDOUT(${client.config.host}) -> Binded on ${port} `)
+                    });
+                }
+            }
+        });
+
+
     }
 
 
@@ -251,37 +284,59 @@ export class ShellService implements OnModuleInit {
 
 
 
-    async runCommand(command: string, client: SshExtended): Promise<ShellCommandResultDto> {
+    async runCommand(command: string, client: SshExtended, opts?: { onStdout?, onStderr?}): Promise<ShellCommandResultDto> {
+
+        Logger.verbose(`EXEC(${client.config.host}) -> '${command}' on `);
 
         const result = await client.execCommand(command, {
-            onStderr: (chunk) => {
-                this.wsGateway.broadcast(JSON.stringify({
-                    type: 'ShellCommandResultDto.error',
-                    data: {
-                        command,
-                        error: chunk.toString(),
-                        host: client.config.host,
-                    }
-                }))
-            },
-            onStdout: (chunk) => {
+            cwd: '/home',
+            execOptions: { pty: true },
+
+            onStdout: (_chunk) => {
+
+                const chunk = trim(_chunk.toString(), ' \r\n\t');
+
+                if (opts?.onStdout) opts.onStdout(chunk);
+
                 this.wsGateway.broadcast(JSON.stringify({
                     type: 'ShellCommandResultDto.output',
                     data: {
                         command,
-                        output: chunk.toString(),
+                        output: chunk,
                         host: client.config.host,
                     }
-                }))
+                }));
+
+                Logger.verbose(`STDOUT(${client.config.host}) -> ${chunk}`);
+
+            },
+            onStderr: (_chunk) => {
+
+                const chunk = trim(_chunk.toString(), ' \r\n\t');
+
+                if (opts?.onStderr) opts.onStderr(chunk);
+
+                this.wsGateway.broadcast(JSON.stringify({
+                    type: 'ShellCommandResultDto.error',
+                    data: {
+                        command,
+                        error: chunk,
+                        host: client.config.host,
+                    }
+                }));
+                Logger.verbose(`STDERR(${client.config.host}) -> ${chunk}`);
             }
         });
 
-        return {
+        const model = {
+            host: client.config.host,
             code: result.code,
             signal: result.signal,
             errors: result.stderr?.split('\n'),
             outputs: result.stdout?.split('\n')
         };
+
+        return model;
 
     }
 

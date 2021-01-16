@@ -7,6 +7,7 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 import { AppModule } from './app.module';
 import { configureMiddlewares } from './configure-middlewares';
 import { WsAdapter } from '@nestjs/platform-ws';
+import { ConfigService } from './config/config.service';
 
 process.on('unhandledRejection', (e: Error) => {
   Logger.error('unhandledRejection: ' + e.message, e.stack);
@@ -18,14 +19,13 @@ process.on('uncaughtException', (e: Error) => {
 
 export async function bootstrap() {
 
-  const port = Number(process.env.PORT || 3000);
-  const host = process.env.HOST || '127.0.0.1';
+  const { port, host } = new ConfigService().config;
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {});
 
   app.useWebSocketAdapter(new WsAdapter(app) as any);
 
-  
+
   configureMiddlewares(app);
 
   app.enableShutdownHooks();
@@ -35,7 +35,7 @@ export async function bootstrap() {
   await app.listen(port, host);
 
   Logger.verbose(
-    `Started at ${await app.getUrl()} with NODE_ENV=${process.env.NODE_ENV}`,
+    `Http server is listening ${await app.getUrl()} with NODE_ENV=${process.env.NODE_ENV}`,
     'Server'
   );
 }
