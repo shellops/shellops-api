@@ -1,4 +1,5 @@
-import { Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { ConfigService } from '../config/config.service';
 import { ShellConnectDto } from '../shell/shell-connect.dto';
 import { ShellService } from '../shell/shell.service';
 
@@ -6,10 +7,30 @@ import { ShellService } from '../shell/shell.service';
 export class NodeService {
 
 
-    constructor(private readonly shellService: ShellService) { }
+    constructor(
+        private readonly shellService: ShellService,
+        private readonly configService: ConfigService) { }
 
-    addNode(dto: ShellConnectDto) {
-        
+
+    listNodes() {
+        return this.configService.config.connections
+    }
+
+    async addNode(dto: ShellConnectDto) {
+
+        console.log({ dto })
+        try {
+            const client = await this.shellService.createAndConnectClient(dto);
+
+            client.connection.end();
+
+        } catch (error) {
+            throw new BadRequestException(error.message);
+        }
+
+        this.configService.config.connections.push(dto);
+        this.configService.saveConfig();
+
     }
 
 }

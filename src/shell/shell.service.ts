@@ -17,6 +17,8 @@ export class ShellService {
             password,
         });
 
+        console.log('connected');
+        
         return client;
 
     }

@@ -16,7 +16,6 @@ export class ConfigService implements OnModuleInit {
     private transformOpts: ClassTransformOptions = {
         enableCircularCheck: true,
         enableImplicitConversion: true,
-        excludeExtraneousValues: true,
         exposeDefaultValues: true,
         strategy: 'exposeAll',
     }
@@ -26,6 +25,7 @@ export class ConfigService implements OnModuleInit {
     }
 
     set config(value: ConfigDto) {
+        console.log('config changed')
         this.#config = value;
         this.saveConfig(value);
     }
@@ -38,17 +38,19 @@ export class ConfigService implements OnModuleInit {
         await validateOrReject(this.config);
     }
 
-    public saveConfig(value: ConfigDto): void {
-        fs.writeJSONSync(this.configPath, classToPlain(value, this.transformOpts))
+    public saveConfig(value: ConfigDto = this.config): void {
+        fs.writeJSONSync(this.configPath, classToPlain(value, this.transformOpts), { spaces: 2 })
     }
 
-    public loadConfig(): ConfigDto {
+    private loadConfig(): ConfigDto {
 
         // create local config if not exists
         if (!fs.existsSync(this.configPath)) {
 
             const configDto = new ConfigDto();
-            fs.writeJSONSync(this.configPath, classToPlain(configDto, this.transformOpts));
+            fs.writeJSONSync(this.configPath, classToPlain(configDto, this.transformOpts), { spaces: 2 });
+
+            return configDto;
 
         } else {
 
