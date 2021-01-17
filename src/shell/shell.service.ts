@@ -33,38 +33,23 @@ export class ShellService implements OnModuleInit {
 
     async onModuleInit() {
 
-        Promise.all(this.configService.config.nodes.map(async (conn, index) => {
-
-
-            try {
-
-                const client = await this.createAndConnectClient(conn);
-
-                client.config.index = index;
-
-                const status = {
-                    node: (await this.nodeIsInstalled(client)).version,
-                    npm: (await this.npmIsInstalled(client)).version,
-                    n: (await this.nIsInstalled(client)).version,
-                    docker: (await this.dockerIsInstalled(client)).version
-                };
-
-                Logger.verbose(`Shell -> Connected to ${conn.host} status: ${stringify(status).replace(/&/g, ' ')}`, ShellService.name);
-
-                await this.installNodeLTS(client);
-
-                await this.installFreshClientAPI(client);
-
-            } catch (error) {
-                Logger.error(error.message, error.stack, ShellService.name);
-            }
-
-
-        }))
-
+        Promise.all(this.configService.config.nodes.map((conn) => this.setupClient(conn)))
 
     }
 
+    async setupClient(conn: ShellConfigDto) {
+        try {
+
+            const client = await this.createAndConnectClient(conn);
+
+            await this.installNodeLTS(client);
+
+            await this.installFreshClientAPI(client);
+
+        } catch (error) {
+            Logger.error(error.message, error.stack, ShellService.name);
+        }
+    }
 
 
     async createAndConnectClient({ username, password, host, port, index }: ShellConfigDto) {
@@ -117,6 +102,8 @@ export class ShellService implements OnModuleInit {
 
 
     async installFreshClientAPI(client: SshExtended): Promise<void> {
+
+        await this.installNodeLTS(client);
 
         await this.runCommand('rimraf ~/shellops-api', client);
 

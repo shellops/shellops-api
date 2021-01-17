@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger } from '@nestjs/common';
 import { ConfigService } from '../config/config.service';
 import { ShellConfigDto } from '../shell/shell-connect.dto';
 import { ShellService } from '../shell/shell.service';
@@ -18,7 +18,6 @@ export class NodeService {
 
     async addNode(dto: ShellConfigDto) {
 
-        console.log({ dto })
         try {
             const client = await this.shellService.createAndConnectClient(dto);
 
@@ -30,6 +29,11 @@ export class NodeService {
 
         this.configService.config.nodes.push(dto);
         this.configService.saveConfig();
+
+        this.shellService
+            .setupClient(dto)
+            .catch((err) =>
+                Logger.error(`Failed to setup client after add: ${err.message}`, err.stack, NodeService.name));
 
     }
 
