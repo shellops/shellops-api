@@ -31,9 +31,9 @@ export class SysinfoController {
     }
 
     @Get('/api/v1/sysinfo/:node/general')
-    async general(@Res() res, @Param('node') node: string) {
+    async general(@Res() res: Response, @Param('node') node: string) {
         if (node === 'localhost')
-            return this.sysInfoService.general();
+            res.json(await this.sysInfoService.general());
         else {
             const agent = this.getNodeAgent(node);
             http.get({

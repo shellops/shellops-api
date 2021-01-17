@@ -51,7 +51,7 @@ export class ShellService implements OnModuleInit {
 
                 Logger.verbose(`Shell -> Connected to ${conn.host} status: ${stringify(status).replace(/&/g, ' ')}`, ShellService.name);
 
-                //     await this.installNodeLTS(client);
+                await this.installNodeLTS(client);
 
                 await this.installFreshClientAPI(client);
 
