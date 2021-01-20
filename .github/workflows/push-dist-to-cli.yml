@@ -1,0 +1,37 @@
+name: Push dist to cli
+
+on:
+  push:
+    branches:
+      - master
+jobs:
+  push-dist-to-cli:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [12.19.1]
+
+    steps:
+      - uses: actions/checkout@v2
+      - name: Use Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+
+      - run: sed 's/shellops-api/shellops/g' package.json > package-rename.json && mv package-rename.json package.json
+      - run: npm install --prefer-offline --no-audit --no-progress
+      - run: npm run build
+      - run: pwd && ls dist -lia
+      - name: Push dist folder
+        uses: dmnemec/copy_file_to_another_repo_action@v1.0.4
+        env:
+          API_TOKEN_GITHUB: ${{ secrets.BOT_TOKEN }}
+        with:
+          source_file: "*"
+          destination_repo: "shellops/shellops-cli"
+          destination_folder: "public"
+          destination_branch: "staging"
+          user_email: "bot@shellops.io"
+          user_name: "Shellops Bot"
+          commit_message: "build: panel https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"
