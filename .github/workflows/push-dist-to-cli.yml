@@ -5,7 +5,7 @@ on:
     branches:
       - master
 jobs:
-  push-dist-to-cli:
+  push-api-to-cli:
     runs-on: ubuntu-latest
 
     strategy:
@@ -34,4 +34,3 @@ jobs:
           destination_branch: "staging"
           user_email: "bot@shellops.io"
           user_name: "Shellops Bot"
-          commit_message: "build: panel https://github.com/${GITHUB_REPOSITORY}/commit/${GITHUB_SHA}"
