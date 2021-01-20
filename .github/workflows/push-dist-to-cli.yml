@@ -23,6 +23,7 @@ jobs:
       - run: npm install --prefer-offline --no-audit --no-progress
       - run: npm run build
       - run: rm -rf node_modules
+      - run: rm -rf src
       - run: pwd && ls -lia
       - name: Push dist folder
         uses: dmnemec/copy_file_to_another_repo_action@v1.0.4
