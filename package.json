@@ -2,8 +2,11 @@
   "name": "shellops-api",
   "version": "0.0.1",
   "description": "",
-  "author": "",
-  "private": true,
+  "repository": {
+    "url": "https://github.com/shellops/shellops-api"
+  },
+  "author": "Mohsen Esmaeili <m-esm@hotmail.com",
+  "private": false,
   "license": "UNLICENSED",
   "scripts": {
     "prebuild": "rimraf dist",
