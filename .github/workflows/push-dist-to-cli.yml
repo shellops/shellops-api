@@ -30,7 +30,7 @@ jobs:
         with:
           source_file: "*"
           destination_repo: "shellops/shellops-cli"
-          destination_folder: "public"
+          destination_folder: "."
           destination_branch: "staging"
           user_email: "bot@shellops.io"
           user_name: "Shellops Bot"
