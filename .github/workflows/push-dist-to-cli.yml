@@ -22,7 +22,8 @@ jobs:
       - run: sed 's/shellops-api/shellops/g' package.json > package-rename.json && mv package-rename.json package.json
       - run: npm install --prefer-offline --no-audit --no-progress
       - run: npm run build
-      - run: pwd && ls dist -lia
+      - run: rm -rf node_modules
+      - run: pwd && ls -lia
       - name: Push dist folder
         uses: dmnemec/copy_file_to_another_repo_action@v1.0.4
         env:
