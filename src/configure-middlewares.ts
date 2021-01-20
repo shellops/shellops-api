@@ -1,7 +1,6 @@
 import 'source-map-support/register';
 
-import { ClassSerializerInterceptor, ValidationPipe } from '@nestjs/common';
-import { Reflector } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as compression from 'compression';

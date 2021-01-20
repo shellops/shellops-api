@@ -1,7 +1,8 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import * as http from 'http';
 import { trim } from 'lodash';
 import { NodeSSH } from 'node-ssh';
-import { stringify } from 'querystring';
+import * as ssh2 from 'ssh2';
 
 import { ConfigService } from '../config/config.service';
 import { WsGateway } from '../ws/ws.gateway';
@@ -37,7 +38,42 @@ export class ShellService implements OnModuleInit {
 
     }
 
+    private getNodeHttpAgent(conn: ShellConfigDto) {
+
+        const agent = new (ssh2 as any).HTTPAgent(conn);
+
+        agent.defaultPort = 3000;
+
+        return agent;
+    }
+
     async setupClient(conn: ShellConfigDto) {
+        let apiIsInstalled = false
+
+        apiIsInstalled = await new Promise((resolve) => {
+            try {
+                http.get({
+                    path: '/api/v1/sysinfo/localhost/general',
+                    agent: this.getNodeHttpAgent(conn),
+                    headers: { Connection: 'close' }
+                }, (res) => {
+
+                    if (res?.statusCode === 200) return resolve(true);
+
+                    resolve(false);
+
+                }).on('error', (error) => {
+                    Logger.warn(error.message, ShellService.name);
+                    resolve(false);
+                });
+            } catch (error) {
+                Logger.error(error.message, error.stack, ShellService.name);
+                resolve(false);
+            }
+        });
+
+        if (apiIsInstalled) return;
+
         try {
 
             const client = await this.createAndConnectClient(conn);
@@ -105,6 +141,10 @@ export class ShellService implements OnModuleInit {
 
         await this.installNodeLTS(client);
 
+        await this.runCommand('npm i --no-audit --no-progress -g pm2 && pm2 startup', client);
+
+        await this.runCommand('pm2 delete shellops-api', client);
+
         await this.runCommand('rimraf ~/shellops-api', client);
 
         await this.runCommand('rimraf ~/.shellops.json', client);
@@ -115,7 +155,9 @@ export class ShellService implements OnModuleInit {
 
         await this.runCommand('cd ~/shellops-api && npm run build', client);
 
-        await this.runCommand('cd ~/shellops-api && npm run start:prod', client);
+        await this.runCommand('cd ~/shellops-api && pm2 start dist/main.js --name shellops-api', client);
+
+        await this.runCommand('pm2 save', client);
 
     }
 
