@@ -6,6 +6,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as compression from 'compression';
 import { readFileSync } from 'fs-extra';
 import * as helmet from 'helmet';
+import { join } from 'path';
 
 
 export function configureMiddlewares(app: NestExpressApplication) {
@@ -13,7 +14,7 @@ export function configureMiddlewares(app: NestExpressApplication) {
     app.enableCors();
     app.use(compression());
     app.use(helmet());
- 
+
 
     app.useGlobalPipes(
         new ValidationPipe({
@@ -39,7 +40,7 @@ export function configureMiddlewares(app: NestExpressApplication) {
     const document = SwaggerModule.createDocument(app, options);
 
     SwaggerModule.setup('swagger', app, document, {
-        customCss: readFileSync('./swagger/swagger.css').toString(),
+        customCss: readFileSync(join(process.cwd(), './swagger/swagger.css')).toString(),
         customJs: 'swagger.js'
     });
 
