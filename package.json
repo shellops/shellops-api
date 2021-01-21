@@ -1,6 +1,6 @@
 {
   "name": "shellops-api",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "",
   "repository": {
     "url": "https://github.com/shellops/shellops-api"
@@ -8,6 +8,7 @@
   "author": "Mohsen Esmaeili <m-esm@hotmail.com",
   "private": false,
   "license": "UNLICENSED",
+  "bin": "dist/main.js",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
