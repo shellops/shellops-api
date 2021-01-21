@@ -10,6 +10,7 @@ import { AppModule } from './app.module';
 import { configureMiddlewares } from './configure-middlewares';
 import { WsAdapter } from '@nestjs/platform-ws';
 import { ConfigService } from './config/config.service';
+import { join } from 'path';
 
 process.on('unhandledRejection', (e: Error) => {
   Logger.error('unhandledRejection: ' + e.message, e.stack);
@@ -27,7 +28,7 @@ export async function bootstrap() {
 
   app.useWebSocketAdapter(new WsAdapter(app) as any);
 
-  app.useStaticAssets('public');
+  app.useStaticAssets(join(__dirname, '../public'));
 
   configureMiddlewares(app);
 
