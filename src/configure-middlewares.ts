@@ -40,7 +40,7 @@ export function configureMiddlewares(app: NestExpressApplication) {
     const document = SwaggerModule.createDocument(app, options);
 
     SwaggerModule.setup('swagger', app, document, {
-        customCss: readFileSync(join(process.cwd(), './swagger/swagger.css')).toString(),
+        customCss: readFileSync(join(__dirname, '../swagger/swagger.css')).toString(),
         customJs: 'swagger.js'
     });
 
