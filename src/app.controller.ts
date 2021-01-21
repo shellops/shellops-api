@@ -7,7 +7,7 @@ import { AppService } from './app.service';
 @ApiTags('App')
 export class AppController {
 
-  @Get()
+  @Get('/api')
   @ApiOperation({ summary: 'Redirect to swagger' })
   redirectToSwagger(@Res() res: Response) {
     res.redirect('/swagger')
