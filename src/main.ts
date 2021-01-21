@@ -1,3 +1,5 @@
+#!/usr/bin/env node
+
 import 'source-map-support/register';
 
 import { Logger } from '@nestjs/common';
@@ -25,6 +27,7 @@ export async function bootstrap() {
 
   app.useWebSocketAdapter(new WsAdapter(app) as any);
 
+  app.useStaticAssets('public');
 
   configureMiddlewares(app);
 
