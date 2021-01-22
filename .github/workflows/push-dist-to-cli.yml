@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: ${{ matrix.node-version }}
 
-      - run: sed 's/shellops-api/shellops/g' package.json > package-rename.json && mv package-rename.json package.json
+      - run: sed '0,/shellops-api/s//shellops/' package.json > package-rename.json && mv package-rename.json package.json
       - run: npm install --prefer-offline --no-audit --no-progress
       - run: npm run build
       - run: rm -rf node_modules
