@@ -34,8 +34,8 @@ export class SysinfoService {
 
     async docker() {
         return {
-            docker: await info.dockerInfo(),
-            containers: await info.dockerContainers()
+            ...await info.dockerInfo(),
+            containers: await info.dockerContainers(),
         }
     }
 
