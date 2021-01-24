@@ -78,8 +78,22 @@ export class SysinfoController {
 
 
     @Get('/api/v1/sysinfo/:node/docker')
-    async docker() {
-        return this.sysInfoService.docker();
+    async docker(@Res() res: Response, @Param('node') node: string) {
+
+        if (node === 'localhost')
+            res.json(await this.sysInfoService.docker());
+        else {
+            const agent = this.getNodeAgent(node);
+            http.get({
+                path: '/api/v1/sysinfo/localhost/docker',
+                agent,
+                headers: { Connection: 'close' }
+            }, (proxyRes) => {
+                proxyRes.pipe(res);
+            });
+        }
+
+
     }
 
 }

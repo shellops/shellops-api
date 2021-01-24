@@ -1,4 +1,4 @@
-import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { BadRequestException, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import * as http from 'http';
 import { trim } from 'lodash';
 import { NodeSSH } from 'node-ssh';
@@ -82,11 +82,23 @@ export class ShellService implements OnModuleInit {
 
             await this.installFreshClientAPI(client);
 
+            client.connection.end();
+
         } catch (error) {
             Logger.error(error.message, error.stack, ShellService.name);
         }
     }
 
+
+    async getShellByHostname(host: string) {
+
+        const node = this.configService.config.nodes.find(p => p.host === host);
+
+        if (!node) throw new BadRequestException('Not node found');
+
+        return this.createAndConnectClient(node);
+
+    }
 
     async createAndConnectClient({ username, password, host, port, index }: ShellConfigDto) {
 
@@ -216,7 +228,7 @@ export class ShellService implements OnModuleInit {
 
 
 
-    async installDocker(client: SshExtended): Promise<void> {
+    async installDocker(client: SshExtended): Promise<ShellCommandResultDto> {
 
         const depInstallResult = await this.runCommand('sudo apt-get install -y ' +
             ['apt-transport-https',
@@ -248,7 +260,7 @@ export class ShellService implements OnModuleInit {
         if (installDockerResult.code)
             throw new Error(JSON.stringify(installDockerResult, null, 2));
 
-
+        return installDockerResult;
     }
 
     async installN(client: SshExtended): Promise<void> {
