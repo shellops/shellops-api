@@ -1,8 +1,10 @@
 import { BadRequestException, Injectable, Logger, OnModuleInit } from '@nestjs/common';
+import { exec } from 'child_process';
 import * as http from 'http';
 import { trim } from 'lodash';
 import { NodeSSH } from 'node-ssh';
 import * as ssh2 from 'ssh2';
+import { version } from 'uuid';
 
 import { ConfigService } from '../config/config.service';
 import { WsGateway } from '../ws/ws.gateway';
@@ -224,6 +226,13 @@ export class ShellService implements OnModuleInit {
                 return;
             } else
                 throw new Error(JSON.stringify(aptKeyInstallResult, null, 2));
+    }
+
+
+    async uninstallDocker(client: SshExtended): Promise<ShellCommandResultDto> {
+
+        return this.runCommand('sudo apt-get remove docker-ce docker-ce-cli containerd.io', client);
+
     }
 
 
