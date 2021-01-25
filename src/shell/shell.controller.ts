@@ -9,6 +9,18 @@ export class ShellController {
     constructor(private readonly shellService: ShellService) { }
 
 
+    @Post('/api/v1/shell/:node/poste')
+    @ApiOperation({ summary: 'Installs docker on remote/local node' })
+    async installPoste(@Param('node') node: string) {
+
+        const client = await this.shellService.getShellByHostname(node);
+
+        await this.shellService.installPoste(client);
+
+        client.connection.end();
+
+    }
+
 
     @Post('/api/v1/shell/:node/docker')
     @ApiOperation({ summary: 'Installs docker on remote/local node' })

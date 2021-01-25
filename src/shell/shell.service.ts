@@ -273,6 +273,25 @@ export class ShellService implements OnModuleInit {
         return installDockerResult;
     }
 
+    async installPoste(client: SshExtended): Promise<void> {
+
+        await this.runCommand('sudo docker container rm poste --force', client);
+        await this.runCommand(`docker run -d --name poste --restart always \
+ -p 110:110 \
+ -p 143:143 \
+ -p 2096:80 \
+ -p 25:25 \
+ -p 465:465 \
+ -p 587:587 \
+ -p 993:993 \
+ -p 995:995 \
+ -e HTTPS=OFF \
+ -v /etc/localtime:/etc/localtime \
+ -v /home/docker/poste:/data \
+ analogic/poste.io:latest`, client);
+
+    }
+
     async installN(client: SshExtended): Promise<void> {
 
         await this.installNode(client);
@@ -335,7 +354,9 @@ export class ShellService implements OnModuleInit {
 
             onStdout: (_chunk) => {
 
-                const chunk = trim(_chunk.toString(), ' \r\n\t');
+                const chunk = trim(_chunk.toString(), ' ');
+
+                if(chunk.length <= 1) return;
 
                 if (opts?.onStdout) opts.onStdout(chunk);
 
@@ -348,12 +369,14 @@ export class ShellService implements OnModuleInit {
                     }
                 }));
 
-                Logger.verbose(`STDOUT(${client.config.host}) -> ${chunk}`);
+                Logger.verbose(`STDOUT(${client.config.host}) -> ${JSON.stringify(chunk)}`);
 
             },
             onStderr: (_chunk) => {
 
-                const chunk = trim(_chunk.toString(), ' \r\n\t');
+                const chunk = trim(_chunk.toString(), ' ');
+
+                if(chunk.length <= 1) return;
 
                 if (opts?.onStderr) opts.onStderr(chunk);
 
@@ -365,7 +388,7 @@ export class ShellService implements OnModuleInit {
                         host: client.config.host,
                     }
                 }));
-                Logger.verbose(`STDERR(${client.config.host}) -> ${chunk}`);
+                Logger.verbose(`STDERR(${client.config.host}) -> ${JSON.stringify(chunk)}`);
             }
         });
 
