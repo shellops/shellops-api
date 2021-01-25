@@ -80,8 +80,6 @@ export class ShellService implements OnModuleInit {
 
             const client = await this.createAndConnectClient(conn);
 
-            await this.installNodeLTS(client);
-
             await this.installFreshClientAPI(client);
 
             client.connection.end();
@@ -217,6 +215,8 @@ export class ShellService implements OnModuleInit {
 
 
     }
+
+
     async installDockerAptKey(client: SshExtended): Promise<void> {
         const aptKeyInstallResult = await this.runCommand('curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -', client);
         if (aptKeyInstallResult.code)
@@ -271,6 +271,12 @@ export class ShellService implements OnModuleInit {
             throw new Error(JSON.stringify(installDockerResult, null, 2));
 
         return installDockerResult;
+    }
+    
+    async installNodeJsApp(client: SshExtended, gitRepoUrl:string){
+
+        // 
+
     }
 
     async installPoste(client: SshExtended): Promise<void> {
