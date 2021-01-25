@@ -229,9 +229,10 @@ export class ShellService implements OnModuleInit {
     }
 
 
-    async uninstallDocker(client: SshExtended): Promise<ShellCommandResultDto> {
+    async uninstallDocker(client: SshExtended): Promise<void> {
 
-        return this.runCommand('sudo apt-get remove docker-ce docker-ce-cli containerd.io', client);
+        await this.runCommand('sudo apt remove docker-ce containerd.io -y', client);
+        await this.runCommand('sudo apt remove docker-ce-cli -y', client);
 
     }
 

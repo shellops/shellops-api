@@ -1,6 +1,6 @@
 {
   "name": "shellops-api",
-  "version": "0.0.13",
+  "version": "0.1.0",
   "description": "Assists in managing Docker on your server",
   "repository": {
     "url": "https://github.com/shellops/shellops-api"

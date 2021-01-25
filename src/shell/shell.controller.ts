@@ -23,7 +23,7 @@ export class ShellController {
     }
 
 
-    @Delete('/api/v1/shell/:node/docker/install')
+    @Delete('/api/v1/shell/:node/docker')
     @ApiOperation({ summary: 'Installs docker on remote/local node' })
     async uninstallDocker(@Param('node') node: string) {
 
