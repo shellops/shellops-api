@@ -16,6 +16,14 @@ export class NodeService {
         return this.configService.config.nodes
     }
 
+    async deleteNode(host: string) {
+
+        this.configService.config.nodes = this.configService.config.nodes.filter(p => p.host !== host);
+
+        this.configService.saveConfig();
+
+    }
+
     async addNode(dto: ShellConfigDto) {
 
         try {

@@ -1,4 +1,4 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { ShellConfigDto } from '../shell/shell-connect.dto';
 import { NodeService } from './node.service';
@@ -13,6 +13,12 @@ export class NodeController {
     @ApiOperation({ summary: 'Add new node to manage', description: 'adds the node connection to ~/.shellops.json' })
     addNode(@Body() dto: ShellConfigDto) {
         return this.nodeService.addNode(dto);
+    }
+
+    @Delete('/api/v1/nodes/:node')
+    @ApiOperation({ summary: 'Installs docker on remote/local node' })
+    async deleteNode(@Param('node') node: string) {
+        return this.nodeService.deleteNode(node);
     }
 
     @Get('/api/v1/nodes')
