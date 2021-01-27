@@ -21,7 +21,6 @@ process.on('uncaughtException', (e: Error) => {
 });
 
 export async function bootstrap() {
-
   const { port, host } = new ConfigService().config;
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {});
@@ -39,10 +38,11 @@ export async function bootstrap() {
   await app.listen(port, host);
 
   Logger.verbose(
-    `Http server is listening ${await app.getUrl()} with NODE_ENV=${process.env.NODE_ENV}`,
-    'Server'
+    `Http server is listening ${await app.getUrl()} with NODE_ENV=${
+      process.env.NODE_ENV
+    }`,
+    'Server',
   );
 }
-
 
 bootstrap();

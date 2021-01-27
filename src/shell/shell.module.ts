@@ -9,6 +9,6 @@ import { ShellController } from './shell.controller';
   providers: [ShellService],
   exports: [ShellService],
   imports: [ConfigModule, WsModule],
-  controllers: [ShellController]
+  controllers: [ShellController],
 })
-export class ShellModule { }
+export class ShellModule {}

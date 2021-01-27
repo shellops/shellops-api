@@ -1,15 +1,13 @@
-import { AppTemplate } from "../store/app-template.interface";
+import { AppTemplate } from '../store/app-template.interface';
 
 export interface MachineApp extends AppTemplate {
+  id: string;
 
-    id: string;
+  restarts: number;
 
-    restarts: number;
+  healthy: boolean;
 
-    healthy: boolean;
+  ready: boolean;
 
-    ready: boolean;
-
-    connected: boolean;
-
+  connected: boolean;
 }

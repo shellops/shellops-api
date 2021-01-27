@@ -3,6 +3,6 @@ import { DatabaseService } from './database/database.service';
 import { AuthService } from './auth/auth.service';
 
 @Module({
-  providers: [DatabaseService, AuthService]
+  providers: [DatabaseService, AuthService],
 })
 export class FirebaseModule {}

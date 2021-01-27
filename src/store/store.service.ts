@@ -2,14 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export class StoreService {
+  constructor() {}
 
-    constructor() {
-
-    }
-
-    getAppTemplates() { 
-
-        
-    }
-
+  getAppTemplates() {}
 }

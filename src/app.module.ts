@@ -16,7 +16,19 @@ import { FinancialModule } from './financial/financial.module';
 import { DockerModule } from './docker/docker.module';
 
 @Module({
-  imports: [SysinfoModule, ShellModule, FtpModule, NodeModule, ConfigModule, WsModule, MachineModule, StoreModule, FirebaseModule, FinancialModule, DockerModule],
+  imports: [
+    SysinfoModule,
+    ShellModule,
+    FtpModule,
+    NodeModule,
+    ConfigModule,
+    WsModule,
+    MachineModule,
+    StoreModule,
+    FirebaseModule,
+    FinancialModule,
+    DockerModule,
+  ],
   controllers: [AppController],
   providers: [AppService, DatabaseService, AuthService],
 })

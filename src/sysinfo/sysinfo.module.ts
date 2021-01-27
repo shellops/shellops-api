@@ -7,6 +7,6 @@ import { SysinfoService } from './sysinfo.service';
 @Module({
   providers: [SysinfoService],
   controllers: [SysinfoController],
-  imports: [ConfigModule]
+  imports: [ConfigModule],
 })
-export class SysinfoModule { }
+export class SysinfoModule {}

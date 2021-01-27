@@ -2,9 +2,6 @@ import { Module } from '@nestjs/common';
 import { StoreService } from './store.service';
 
 @Module({
-  providers: [StoreService]
+  providers: [StoreService],
 })
-export class StoreModule {
-
-    
-}
+export class StoreModule {}
