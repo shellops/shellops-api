@@ -14,6 +14,7 @@ import { DatabaseService } from './database/database.service';
 import { AuthService } from './auth/auth.service';
 import { FinancialModule } from './financial/financial.module';
 import { DockerModule } from './docker/docker.module';
+import { DatabaseModule } from './database/database.module';
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { DockerModule } from './docker/docker.module';
     FirebaseModule,
     FinancialModule,
     DockerModule,
+    DatabaseModule,
   ],
   controllers: [AppController],
   providers: [AppService, DatabaseService, AuthService],
