@@ -9,14 +9,14 @@ export class DatabaseService {
 
     constructor() { }
 
-    async get(path: string) {
+    async get<T>(path: string): Promise<T> {
         if (this.firebase)
-            return (await this.firebase.database().ref(path).get()).toJSON();
+            return (await this.firebase.database().ref(path).get()).toJSON() as T;
         else
             _.get(this.temporary, path);
     }
 
-    async update(path: string, update: any) {
+    async update(path: string, update: any): Promise<void> {
         if (this.firebase)
             await this.firebase.database().ref(path).update(update);
         else
