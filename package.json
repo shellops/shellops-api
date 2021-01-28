@@ -41,6 +41,7 @@
     "firebase-admin": "^9.4.2",
     "fs-extra": "^9.0.1",
     "get-port": "^5.1.1",
+    "git-precommit-checks": "^3.0.6",
     "helmet": "^4.3.1",
     "lodash": "^4.17.20",
     "node-fetch": "^2.6.1",
@@ -90,8 +91,13 @@
     "typescript": "^4.0.5"
   },
   "hooks": {
-    "pre-commit": "yarn lint-staged",
+    "pre-commit": "git-precommit-checks",
     "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   },
   "lint-staged": {
     "*.{ts,js}": "eslint --fix"
