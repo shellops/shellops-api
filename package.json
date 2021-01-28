@@ -36,12 +36,10 @@
     "class-transformer": "^0.3.2",
     "class-validator": "^0.13.1",
     "compression": "^1.7.4",
-    "lint-staged": "^10.2.11",
     "config": "^3.3.3",
     "firebase-admin": "^9.4.2",
     "fs-extra": "^9.0.1",
     "get-port": "^5.1.1",
-    "git-precommit-checks": "^3.0.6",
     "helmet": "^4.3.1",
     "lodash": "^4.17.20",
     "node-fetch": "^2.6.1",
@@ -57,9 +55,7 @@
     "tunnel-ssh": "^4.1.4",
     "uuid": "^8.3.2",
     "virtual-dom-stringify": "^3.0.1",
-    "ws": "^7.4.2",
-    "@commitlint/cli": "^9.1.1",
-    "@commitlint/config-conventional": "^9.1.1"
+    "ws": "^7.4.2"
   },
   "devDependencies": {
     "@nestjs/cli": "^7.5.1",
@@ -80,15 +76,19 @@
     "eslint": "^7.12.1",
     "eslint-config-prettier": "7.1.0",
     "eslint-plugin-prettier": "^3.3.1",
-    "jest": "^26.6.3",
     "git-cz": "^4.6.2",
+    "husky": "^4.3.8",
+    "jest": "^26.6.3",
     "prettier": "^2.1.2",
     "supertest": "^6.0.0",
     "ts-jest": "^26.4.3",
     "ts-loader": "^8.0.8",
     "ts-node": "^9.0.0",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^4.0.5"
+    "typescript": "^4.0.5",
+    "@commitlint/cli": "^9.1.1",
+    "@commitlint/config-conventional": "^9.1.1",
+    "git-precommit-checks": "^3.0.6"
   },
   "husky": {
     "hooks": {
@@ -100,9 +100,6 @@
     "extends": [
       "@commitlint/config-conventional"
     ]
-  },
-  "lint-staged": {
-    "*.{ts,js}": "eslint --fix"
   },
   "jest": {
     "moduleFileExtensions": [
