@@ -1,15 +1,30 @@
 import { Injectable } from '@nestjs/common';
-import { DatabaseService } from '../firebase/database/database.service';
+
+import { DatabaseService } from '../database/database.service';
 
 @Injectable()
 export class FinancialService {
-  constructor(private readonly databaseService: DatabaseService) {}
+  constructor(private readonly databaseService: DatabaseService) { }
 
-  async checkUserLimit(userId: string): Promise<{ hostCount: number }> {}
+  async checkUserLimit(userId: string): Promise<{ hostCount: number }> {
 
-  async processSubscription(stripeSubscription: {
-    id: string;
-    quantity: number;
-    status: 'active' | 'canceled' | 'past_due';
-  }) {}
+    const subPath = `${userId}/subscription`;
+    const sub = await this.databaseService.get(subPath);
+
+    if (sub)
+      return { hostCount: 10 };
+    else
+      return { hostCount: 1 };
+
+  }
+
+  async processSubscription(sub: {
+    id: string,
+    quantity: number,
+    status: 'active' | 'canceled' | 'past_due',
+    metadata: { userId: string }
+  }) {
+    const path = `${sub.metadata.userId}/subscription`
+    await this.databaseService.update(path, sub);
+  }
 }
