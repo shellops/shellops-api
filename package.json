@@ -89,6 +89,10 @@
     "tsconfig-paths": "^3.9.0",
     "typescript": "^4.0.5"
   },
+  "hooks": {
+    "pre-commit": "yarn lint-staged",
+    "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+  },
   "lint-staged": {
     "*.{ts,js}": "eslint --fix"
   },
