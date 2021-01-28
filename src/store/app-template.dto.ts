@@ -1,4 +1,4 @@
-export interface AppTemplate {
+export class AppTemplate {
   name: string;
 
   dockerfile: string;

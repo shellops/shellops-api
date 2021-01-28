@@ -1,4 +1,4 @@
-import { AppTemplate } from '../store/app-template.interface';
+import { AppTemplate } from '../store/app-template.dto';
 
 export interface MachineApp extends AppTemplate {
   id: string;

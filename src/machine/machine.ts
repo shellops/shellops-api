@@ -1,4 +1,4 @@
-import { AppTemplate } from '../store/app-template.interface';
+import { AppTemplate } from '../store/app-template.dto';
 import { MachineApp } from './machine-app';
 import { MachineService } from './machine.service';
 
