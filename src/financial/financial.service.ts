@@ -9,9 +9,9 @@ export class FinancialService {
   async checkUserLimit(userId: string): Promise<{ hostCount: number }> {
 
     const subPath = `${userId}/subscription`;
-    const sub = await this.databaseService.get(subPath);
+    const sub = await this.databaseService.get<{ status: string }>(subPath);
 
-    if (sub)
+    if (sub?.status === 'active')
       return { hostCount: 10 };
     else
       return { hostCount: 1 };
