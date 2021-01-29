@@ -2,10 +2,12 @@ import { AppTemplate } from '../store/app-template.dto';
 
 export class MachineApp extends AppTemplate {
 
-  constructor(public id: string, template: AppTemplate) {
+  constructor(public id: string, template: Partial<AppTemplate>) {
     super();
     Object.assign(this, template);
   }
+
+  domains?: string[];
 
   restarts: number;
 
