@@ -5,7 +5,8 @@ export const Config: {
     env: ENV,
     mode: 'API' | 'AGENT',
     host: string,
-    port: number
+    port: number,
+    dockerSocket: string,
 } = {
     env: ENV.DEVELOPMENT,
     mode: process.env['MODE'] as any || 'API', // API or AGENT
@@ -17,5 +18,6 @@ export const Config: {
         mapWidth: 500, // width of the `<svg>`
         pinHeight: 4, // relative to map viewBox
     },
+    dockerSocket: process.env['DOCKER_SOCKET'] || '/var/run/docker.sock'
 };
 
