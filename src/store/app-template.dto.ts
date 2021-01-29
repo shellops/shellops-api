@@ -1,3 +1,5 @@
+import { Machine } from "../machine/machine";
+
 export class AppTemplate {
   name: string;
 
@@ -24,14 +26,18 @@ export class AppTemplate {
   revision: number;
 
   mounts: {
-    local: string;
-    remote: string;
+    host: string;
+    container: string;
   }[];
 
+  webPort?: number;
+
   ports: {
-    local: number;
-    remote: number;
+    host: number;
+    container: number;
   }[];
+
+  dependencies?: Machine[];
 
   variables: {
     name: string;
