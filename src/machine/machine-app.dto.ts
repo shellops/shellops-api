@@ -15,4 +15,6 @@ export class MachineApp extends AppTemplate {
 
   ready: boolean;
 
+  links: { host: string, container: string }[]
+
 }

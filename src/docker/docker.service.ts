@@ -1,9 +1,11 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as Modem from 'docker-modem';
+import { v4 as uuid } from 'uuid';
 
 import { Config } from '../config';
 import { MachineApp } from '../machine/machine-app.dto';
 import { ShellService } from '../shell/shell.service';
+import { AppTemplate } from '../store/app-template.dto';
 
 @Injectable()
 export class DockerService extends ShellService implements OnModuleInit {
@@ -14,16 +16,30 @@ export class DockerService extends ShellService implements OnModuleInit {
 
   }
 
+  createContainer(app: Partial<MachineApp>): Promise<{ Id: string }> {
 
-  createContainer(app: Partial<MachineApp>): Promise<{ containerId: string }> {
+    const name = `${app.name.toLowerCase().replace(/\s/g, '-')}_${app.id || uuid()}`;
+
+    const container: Partial<Docker.Container> = {
+      Image: app.image,
+      Env: (app.variables || [])?.map(item => `${item.name}=${item.value}`),
+      HostConfig: {
+        Links: (app.links || [])?.map(item => `${item.host}:${item.container}`),
+        Binds: (app.mounts || [])?.map(item => `${item.host}:${item.container}`),
+        RestartPolicy: { Name: 'always' },
+        PortBindings: app.ports.reduce<any>(
+          (memo: any, curr) =>
+          ({
+            ...memo,
+            [`${curr.container}/${curr.type || 'tcp'}`]: [{ HostPort: String(curr.host) }]
+          }), {})
+      }
+    };
 
     const call = {
       path: '/containers/create?',
       method: 'POST',
-      options: {
-        Image: app.image,
-        name: 'app2',
-      } as Docker.Config & { name: string },
+      options: { ...container, name },
       statusCodes: {
         200: true,
         201: true,
@@ -44,42 +60,24 @@ export class DockerService extends ShellService implements OnModuleInit {
 
   }
 
-
-  private appToContainer(app: MachineApp): Partial<Docker.Config> & { name: string } {
-
-    const name = `${app.name.toLowerCase().replace(/\s/g, '-')}_${app.id}`;
-
-    const opts = [
-      '--detach',
-      `--name ${name}`,
-      `--restart always`,
-      `-v /etc/localtime:/etc/localtime`,
-      `-l traefik.backend=${name}`,
-      `-l traefik.docker.network=bridge`,
-      `-l traefik.frontend.entryPoints=http,https`,
-      `-l traefik.enable=true`,
-      `-l traefik.port=${app.webPort || 80}`,
-    ];
-
-    app.domains?.length && opts.push(`-l traefik.frontend.rule=Host:${app.domains.join(',')}`);
-
-    app.ports?.forEach(item => opts.push(`-p ${item.host}:${item.container}`));
-    app.variables?.forEach(item => opts.push(`--env ${item.name} ${item.name}`));
-    app.mounts?.forEach(item => opts.push(`--volume ${item.host}:${item.container}`));
-
-    return {
-      name: name,
-      Image: app.image,
+  async removeContainer(containerId: string) {
+    const call = {
+      path: `/containers/${containerId}?`,
+      method: 'DELETE',
+      statusCodes: {
+        204: true,
+        304: true,
+        404: 'no such container',
+        500: 'server error'
+      }
     }
 
-  }
-
-  async removeContainer(container: string) {
-
-  }
-
-  async stopContainer(container: string): Promise<void> {
-
+    await new Promise<void>((resolve, reject) => {
+      this.modem.dial(call, (err) => {
+        if (err) return reject(err)
+        resolve();
+      })
+    });
   }
 
   async restartContainer(container: string) {
@@ -87,8 +85,65 @@ export class DockerService extends ShellService implements OnModuleInit {
     await this.startContainer(container);
   }
 
-  async startContainer(container: string): Promise<void> {
+  async startContainer(containerId: string): Promise<void> {
+    const call = {
+      path: `/containers/${containerId}/start?`,
+      method: 'POST',
+      statusCodes: {
+        204: true,
+        304: true,
+        404: 'no such container',
+        500: 'server error'
+      }
+    }
 
+    await new Promise<void>((resolve, reject) => {
+      this.modem.dial(call, (err) => {
+        if (err) return reject(err)
+        resolve();
+      })
+    })
+  }
+
+  async stopContainer(containerId: string): Promise<void> {
+    const call = {
+      path: `/containers/${containerId}/stop?`,
+      method: 'POST',
+      statusCodes: {
+        204: true,
+        304: true,
+        404: 'no such container',
+        500: 'server error'
+      }
+    }
+
+    await new Promise<void>((resolve, reject) => {
+      this.modem.dial(call, (err) => {
+        if (err) return reject(err)
+        resolve();
+      })
+    });
+
+  }
+
+  async removeImage(image: string): Promise<void> {
+    const call = {
+      path: `/images/${image}?`,
+      method: 'DELETE',
+      statusCodes: {
+        204: true,
+        304: true,
+        404: 'no such container',
+        500: 'server error'
+      }
+    }
+
+    await new Promise<void>((resolve, reject) => {
+      this.modem.dial(call, (err) => {
+        if (err) return reject(err)
+        resolve();
+      })
+    });
   }
 
   async containerInfo(container: string): Promise<Docker.Container> {
@@ -106,8 +161,6 @@ export class DockerService extends ShellService implements OnModuleInit {
   pullImage(imageId: string) {
   }
 
-  removeImage(imageId: string) {
 
-  }
 
 }

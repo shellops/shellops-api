@@ -33,6 +33,7 @@ export class AppTemplate {
   webPort?: number;
 
   ports: {
+    type?: 'tcp' | 'udp',
     host: number;
     container: number;
   }[];
