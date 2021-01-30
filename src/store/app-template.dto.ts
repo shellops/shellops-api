@@ -1,4 +1,4 @@
-import { Machine } from '../machine/machine';
+import { MachineApp } from "../machine/machine-app.dto";
 
 export class AppTemplate {
   name: string;
@@ -38,7 +38,7 @@ export class AppTemplate {
     container: number;
   }[];
 
-  dependencies?: Machine[];
+  dependencies?: MachineApp[];
 
   variables: {
     name: string;
