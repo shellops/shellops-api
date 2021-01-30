@@ -1,3 +1,4 @@
+import { OnModuleInit } from '@nestjs/common';
 import * as fbAdmin from 'firebase-admin';
 import { readJsonSync, writeJson } from 'fs-extra';
 import * as _ from 'lodash';
@@ -5,7 +6,7 @@ import { homedir } from 'os';
 import { join } from 'path';
 import { Database } from './database/db.class';
 
-export class DatabaseService implements Database {
+export class DatabaseService implements Database, OnModuleInit {
   _firebase: fbAdmin.app.App;
   _jsonPath: string;
   _json: any;
@@ -13,6 +14,10 @@ export class DatabaseService implements Database {
   constructor() {
     this.jsonPath = join(homedir(), '.shellops.json');
     this.json = readJsonSync(this._jsonPath);
+  }
+
+  async onModuleInit() {
+    await this.connect();
   }
 
   connect(): Promise<void> {
@@ -55,6 +60,15 @@ export class DatabaseService implements Database {
     if (this.firebase) await this.firebase.database().ref(path).update(update);
     else {
       _.set(this.json, path, _.extend(this.get(path), update));
+
+      await writeJson(this.jsonPath, this.json, { spaces: 2 });
+    }
+  }
+
+  async remove(path: string): Promise<void> {
+    if (this.firebase) await this.firebase.database().ref(path).remove();
+    else {
+      _.unset(this.json, path);
 
       await writeJson(this.jsonPath, this.json, { spaces: 2 });
     }
