@@ -7,4 +7,4 @@ import { FinancialService } from './financial.service';
   imports: [DatabaseModule],
   providers: [FinancialService],
 })
-export class FinancialModule { }
+export class FinancialModule {}

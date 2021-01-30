@@ -1,4 +1,4 @@
-import { Machine } from "../machine/machine";
+import { Machine } from '../machine/machine';
 
 export class AppTemplate {
   name: string;
@@ -33,7 +33,7 @@ export class AppTemplate {
   webPort?: number;
 
   ports: {
-    type?: 'tcp' | 'udp',
+    type?: 'tcp' | 'udp';
     host: number;
     container: number;
   }[];

@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
-
 import { Injectable } from '@nestjs/common';
 import { DatabaseService } from '../database/database.service';
 import * as uuid from 'uuid';

@@ -21,7 +21,6 @@ process.on('uncaughtException', (e: Error) => {
 });
 
 export async function bootstrap() {
-
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {});
 
   app.useWebSocketAdapter(new WsAdapter(app) as any);
