@@ -7,9 +7,9 @@ import { join } from 'path';
 import { Database } from './database/db.class';
 
 export class DatabaseService implements Database, OnModuleInit {
-  _firebase: fbAdmin.app.App;
-  _jsonPath: string;
-  _json: any;
+  private _firebase: fbAdmin.app.App;
+  private _jsonPath: string;
+  private _json: any;
 
   constructor() {
     this.jsonPath = join(homedir(), '.shellops.json');
