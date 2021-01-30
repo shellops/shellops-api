@@ -1,7 +1,7 @@
 namespace Docker {
   export interface Container {
     Hostname: string;
-    Domainname: string;
+    DomainName: string;
     User: string;
     AttachStdin: boolean;
     AttachStdout: boolean;
@@ -11,7 +11,7 @@ namespace Docker {
     StdinOnce: boolean;
     Env: string[];
     Cmd: string[];
-    Entrypoint: string;
+    EntryPoint: string;
     Image: string;
     Labels: Labels;
     Volumes: Volumes;
