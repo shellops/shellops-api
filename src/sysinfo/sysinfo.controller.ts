@@ -10,9 +10,7 @@ import { SysinfoService } from './sysinfo.service';
 @Controller()
 @ApiTags('SysInfo')
 export class SysinfoController {
-  constructor(
-    private readonly sysInfoService: SysinfoService,
-  ) { }
+  constructor(private readonly sysInfoService: SysinfoService) {}
 
   @Get('/api/v1/sysinfo/:node/docker')
   async docker() {
@@ -44,5 +42,4 @@ export class SysinfoController {
 
     res.end(domStringify(map));
   }
-
 }

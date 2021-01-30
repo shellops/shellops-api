@@ -8,4 +8,4 @@ import { SysinfoService } from './sysinfo.service';
   controllers: [SysinfoController],
   imports: [],
 })
-export class SysinfoModule { }
+export class SysinfoModule {}
