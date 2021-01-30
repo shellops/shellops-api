@@ -10,7 +10,7 @@ import { MachineApp } from '../machine/machine-app.dto';
 export class DockerService {
   modem = new Modem({ socketPath: Config.dockerSocket });
 
-  public async getContainerName({ name, id }: Partial<MachineApp>) {
+  public getContainerName({ name, id }: Partial<MachineApp>) {
     return `${name.toLowerCase().replace(/\s/g, '-')}_${id || uuid()}`;
   }
 
