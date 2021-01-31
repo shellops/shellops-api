@@ -1,9 +1,9 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 
 import { Config } from '../config';
-import * as templates from './templates';
 import { DatabaseService } from '../database/database.service';
 import { AppTemplate } from './app-template.dto';
+import * as templates from './templates';
 
 @Injectable()
 export class StoreService implements OnModuleInit {
