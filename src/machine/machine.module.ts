@@ -2,11 +2,12 @@ import { Module } from '@nestjs/common';
 
 import { DatabaseModule } from '../database/database.module';
 import { DockerModule } from '../docker/docker.module';
-import { MachineService } from './machine.service';
+import { SysinfoModule } from '../sysinfo/sysinfo.module';
 import { MachineController } from './machine.controller';
+import { MachineService } from './machine.service';
 
 @Module({
-  imports: [DatabaseModule, DockerModule],
+  imports: [SysinfoModule, DatabaseModule, DockerModule],
   providers: [MachineService],
   exports: [MachineService],
   controllers: [MachineController],

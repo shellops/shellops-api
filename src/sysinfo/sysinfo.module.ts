@@ -5,6 +5,7 @@ import { SysinfoService } from './sysinfo.service';
 
 @Module({
   providers: [SysinfoService],
+  exports: [SysinfoService],
   controllers: [SysinfoController],
   imports: [],
 })

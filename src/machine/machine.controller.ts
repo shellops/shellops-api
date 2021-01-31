@@ -1,5 +1,14 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  UseGuards,
+} from '@nestjs/common';
 import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiGuard } from '../api.guard';
 
 import { AppTemplate } from '../store/app-template.dto';
 import { MachineApp } from './machine-app.dto';
@@ -7,6 +16,7 @@ import { MachineService } from './machine.service';
 
 @Controller()
 @ApiTags('Machine')
+@UseGuards(ApiGuard)
 export class MachineController {
   constructor(private readonly machineService: MachineService) {}
 

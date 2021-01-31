@@ -19,7 +19,8 @@ export class MachineService {
   }
 
   async getApps(): Promise<MachineApp[]> {
-    return this.databaseService.get('apps');
+    const apps = await this.databaseService.get<MachineApp[]>('apps');
+    return apps || [];
   }
 
   async getApp(appId: string): Promise<MachineApp> {
