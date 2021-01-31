@@ -51,12 +51,14 @@ export class DatabaseService implements Database, OnModuleInit {
   }
 
   async get<T>(path: string): Promise<T> {
+    path = path.replace(/\//g, '.');
     if (this.firebase)
       return (await this.firebase.database().ref(path).get()).toJSON() as T;
     else _.get(this.json, path);
   }
 
   async update(path: string, update: any): Promise<void> {
+    path = path.replace(/\//g, '.');
     if (this.firebase) await this.firebase.database().ref(path).update(update);
     else {
       _.set(this.json, path, _.extend(this.get(path), update));
@@ -66,6 +68,7 @@ export class DatabaseService implements Database, OnModuleInit {
   }
 
   async remove(path: string): Promise<void> {
+    path = path.replace(/\//g, '.');
     if (this.firebase) await this.firebase.database().ref(path).remove();
     else {
       _.unset(this.json, path);
