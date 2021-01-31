@@ -1,6 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import { INestApplication } from '@nestjs/common';
+import { WsAdapter } from '@nestjs/platform-ws';
+import { Test, TestingModule } from '@nestjs/testing';
 import * as request from 'supertest';
+
 import { AppModule } from './../src/app.module';
 
 describe('AppController (e2e)', () => {
@@ -12,13 +14,15 @@ describe('AppController (e2e)', () => {
     }).compile();
 
     app = moduleFixture.createNestApplication();
+
+    app.useWebSocketAdapter(new WsAdapter(app) as any);
+
     await app.init();
   });
 
-  it('/ (GET)', () => {
+  it('/api/v1/sysinfo/general (GET)', () => {
     return request(app.getHttpServer())
-      .get('/')
-      .expect(200)
-      .expect('Hello World!');
+      .get('/api/v1/sysinfo/general')
+      .expect(200);
   });
 });

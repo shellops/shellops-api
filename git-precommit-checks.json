@@ -1,0 +1,40 @@
+{
+  "display": {
+    "notifications": true,
+    "offendingContent": true,
+    "rulesSummary": false,
+    "shortStats": true,
+    "verbose": false
+  },
+  "rules": [
+    {
+      "filter": "\\.ts$",
+      "message": "You’ve got leftover `console.log`",
+      "regex": "console\\.log"
+    },
+    {
+      "filter": "\\.ts$",
+      "message": "You’ve got leftover `console.info`",
+      "regex": "console\\.info"
+    },
+    {
+      "filter": "\\.ts$",
+      "message": "You’ve got leftover `console.error`",
+      "regex": "console\\.error"
+    },
+    {
+      "filter": "\\.ts$",
+      "message": "You’ve got leftover `console.time`",
+      "regex": "console\\.time"
+    },
+    {
+      "message": "You’ve got leftover conflict markers",
+      "regex": "/^[<>|=]{4,}/m"
+    },
+    {
+      "filter": "\\.ts$",
+      "message": "You have unfinished devs",
+      "regex": "(?:FIXME|TODO)"
+    }
+  ]
+}
