@@ -1,4 +1,8 @@
+import * as dotenv from 'dotenv';
+
 import { ENV } from './env.enum';
+
+dotenv.config();
 
 export const Config: {
   [key: string]: any;
@@ -25,7 +29,10 @@ export const Config: {
   },
   firebase: {
     clientEmail: process.env['FIREBASE_CLIENT_EMAIL'],
-    privateKey: process.env['FIREBASE_PRIVATE_KEY'],
+    privateKey: (process.env['FIREBASE_PRIVATE_KEY'] || '').replace(
+      /\\n/g,
+      '\n',
+    ),
     projectId: process.env['FIREBASE_PROJECT_ID'],
   },
   dockerSocket: process.env['DOCKER_SOCKET'] || '/var/run/docker.sock',

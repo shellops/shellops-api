@@ -39,6 +39,7 @@
     "class-validator": "^0.13.1",
     "compression": "^1.7.4",
     "docker-modem": "^2.1.4",
+    "dotenv": "^8.2.0",
     "firebase-admin": "^9.4.2",
     "fs-extra": "^9.0.1",
     "get-port": "^5.1.1",
