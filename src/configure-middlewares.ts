@@ -33,7 +33,14 @@ export function configureMiddlewares(app: NestExpressApplication) {
     .setDescription(
       `Environment: ${Config.env} - [Shellops.io](https://shellops.io)`,
     )
-    .addBasicAuth({ type: 'http' })
+    .addBasicAuth({
+      type: 'http',
+      description: 'Use for connecting to remote machines',
+    })
+    .addBearerAuth({
+      type: 'http',
+      description: 'Use for calling shellops services',
+    })
     .setVersion(require(join(__dirname, '../package.json')).version)
     .build();
 
