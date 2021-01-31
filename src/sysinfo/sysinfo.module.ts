@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import { DatabaseModule } from '../database/database.module';
 
 import { SysinfoController } from './sysinfo.controller';
 import { SysinfoService } from './sysinfo.service';
@@ -7,6 +8,6 @@ import { SysinfoService } from './sysinfo.service';
   providers: [SysinfoService],
   exports: [SysinfoService],
   controllers: [SysinfoController],
-  imports: [],
+  imports: [DatabaseModule],
 })
 export class SysinfoModule {}

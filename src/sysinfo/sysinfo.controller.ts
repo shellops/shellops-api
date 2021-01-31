@@ -1,14 +1,17 @@
-import { Controller, Get, Res } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { Controller, Get, Res, UseGuards } from '@nestjs/common';
+import { ApiBasicAuth, ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 import * as svgMap from 'svg-world-map';
 import * as domStringify from 'virtual-dom-stringify';
+import { ApiGuard } from '../api.guard';
 
 import { Config } from '../config';
 import { SysinfoService } from './sysinfo.service';
 
 @Controller()
 @ApiTags('SysInfo')
+@ApiBasicAuth()
+@UseGuards(ApiGuard)
 export class SysinfoController {
   constructor(private readonly sysInfoService: SysinfoService) {}
 

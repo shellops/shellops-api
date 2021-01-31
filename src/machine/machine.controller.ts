@@ -7,7 +7,7 @@ import {
   Post,
   UseGuards,
 } from '@nestjs/common';
-import { ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { ApiBasicAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { ApiGuard } from '../api.guard';
 
 import { AppTemplate } from '../store/app-template.dto';
@@ -16,6 +16,7 @@ import { MachineService } from './machine.service';
 
 @Controller()
 @ApiTags('Machine')
+@ApiBasicAuth()
 @UseGuards(ApiGuard)
 export class MachineController {
   constructor(private readonly machineService: MachineService) {}
