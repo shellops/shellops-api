@@ -8,6 +8,8 @@ import { readFileSync } from 'fs-extra';
 import * as helmet from 'helmet';
 import { join } from 'path';
 
+import { Config } from './config';
+
 export function configureMiddlewares(app: NestExpressApplication) {
   app.enableCors();
   app.use(compression());
@@ -29,9 +31,10 @@ export function configureMiddlewares(app: NestExpressApplication) {
   const options = new DocumentBuilder()
     .setTitle('SHELLOPS API')
     .setDescription(
-      `Environment: ${process.env.NODE_ENV} - [Documentations](/docs)`,
+      `Environment: ${Config.env} - [Shellops.io](https://shellops.io)`,
     )
-    .setVersion('1.0')
+    .addBasicAuth({ type: 'http' })
+    .setVersion(require(join(__dirname, '../package.json')).version)
     .build();
 
   const document = SwaggerModule.createDocument(app, options);

@@ -43,13 +43,13 @@ export async function bootstrap() {
   app
     .get(LoggerService)
     .verbose(
-      chalk.bgBlack.greenBright`\nEnv:` +
+      chalk.bgBlack.greenBright`\nENV: ` +
         chalk.yellow`${Config.env}` +
-        chalk.bgBlack.greenBright`\nMode:` +
+        chalk.bgBlack.greenBright`\nMODE: ` +
         chalk.yellow`${Config.mode}` +
-        chalk.bgBlack.greenBright`\nSwagger:` +
+        chalk.bgBlack.greenBright`\nSWAGGER: ` +
         chalk.yellow`${await app.getUrl()}/swagger` +
-        chalk.bgBlack.greenBright`\nDocker socket:` +
+        chalk.bgBlack.greenBright`\nSOCKET: ` +
         chalk.yellow`${Config.dockerSocket}`,
     );
 }
