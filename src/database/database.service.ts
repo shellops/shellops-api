@@ -1,9 +1,10 @@
 import { OnModuleInit } from '@nestjs/common';
 import * as fbAdmin from 'firebase-admin';
-import { readJsonSync, writeJson } from 'fs-extra';
+import { existsSync, readJsonSync, writeJson, writeJsonSync } from 'fs-extra';
 import * as _ from 'lodash';
 import { homedir } from 'os';
 import { join } from 'path';
+import { Config } from '../config';
 import { Database } from './database/db.class';
 
 export class DatabaseService implements Database, OnModuleInit {
@@ -13,6 +14,9 @@ export class DatabaseService implements Database, OnModuleInit {
 
   constructor() {
     this.jsonPath = join(homedir(), '.shellops.json');
+
+    if (!existsSync(this.jsonPath)) writeJsonSync(this.jsonPath, {});
+
     this.json = readJsonSync(this._jsonPath);
   }
 
