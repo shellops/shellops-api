@@ -3,29 +3,29 @@ import { MachineApp } from "../machine/machine-app.dto";
 export class AppTemplate {
   name: string;
 
-  dockerfile: string;
+  dockerfile?: string;
 
-  description: string;
+  description?: string;
 
-  logo: string;
+  logo?: string;
 
-  screenshots: { url: string; label: string; description: string }[];
+  screenshots?: { url: string; label: string; description: string }[];
 
-  website: string;
+  website?: string;
 
-  github: string;
+  github?: string;
 
-  docs: string;
+  docs?: string;
 
-  author: string;
+  author?: string;
 
-  image: string;
+  image?: string;
 
-  version: string;
+  version?: string;
 
-  revision: number;
+  revision?: number;
 
-  mounts: {
+  mounts?: {
     host: string;
     container: string;
   }[];
@@ -40,7 +40,7 @@ export class AppTemplate {
 
   dependencies?: MachineApp[];
 
-  variables: {
+  variables?: {
     name: string;
     description: string;
     value: string;
