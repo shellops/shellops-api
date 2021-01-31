@@ -9,7 +9,7 @@ export const Config: {
   dockerSocket: string;
 } = {
   env: ENV.DEVELOPMENT,
-  mode: (process.env['MODE'] as any) || 'API', // API or AGENT
+  mode: (process.env['MODE'] as any) || 'AUTO' , // API or AGENT
   host: '0.0.0.0',
   port: Number(process.env['PORT']) || 3000,
   locationMap: {
