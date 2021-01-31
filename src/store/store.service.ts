@@ -1,12 +1,33 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+
+import { Config } from '../config';
+import * as templates from './templates';
 import { DatabaseService } from '../database/database.service';
 import { AppTemplate } from './app-template.dto';
 
 @Injectable()
-export class StoreService {
+export class StoreService implements OnModuleInit {
   constructor(private readonly databaseService: DatabaseService) {}
 
-  getAppTemplates(): Promise<AppTemplate[]> {
+  async onModuleInit() {
+    if (Config.mode !== 'API') return;
+
+    for (const name in templates) {
+      if (Object.prototype.hasOwnProperty.call(templates, name)) {
+        const template = templates[name];
+        await this.saveTemplate(template);
+      }
+    }
+  }
+
+  public async saveTemplate(template: AppTemplate): Promise<void> {
+    await this.databaseService.update(
+      'store/app-templates/' + template.name,
+      template,
+    );
+  }
+
+  public async getAppTemplates(): Promise<AppTemplate[]> {
     return this.databaseService.get<AppTemplate[]>('store/app-templates');
   }
 }
