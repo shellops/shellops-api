@@ -1,20 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
 
+import { MachineController } from './machine.controller';
 import { MachineModule } from './machine.module';
-import { MachineService } from './machine.service';
 
-describe('MachineService', () => {
-  let service: MachineService;
+describe('MachineController', () => {
+  let controller: MachineController;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       imports: [MachineModule],
     }).compile();
 
-    service = module.get<MachineService>(MachineService);
+    controller = module.get<MachineController>(MachineController);
   });
 
   it('should be defined', () => {
-    expect(service).toBeDefined();
+    expect(controller).toBeDefined();
   });
 });

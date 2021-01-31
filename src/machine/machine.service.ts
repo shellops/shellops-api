@@ -13,6 +13,11 @@ export class MachineService {
     private readonly dockerService: DockerService,
   ) {}
 
+  private async getContainerName(appId: string) {
+    const app = await this.getApp(appId);
+    return this.dockerService.getContainerName(app);
+  }
+
   async getApps(): Promise<MachineApp[]> {
     return this.databaseService.get('apps');
   }
@@ -21,15 +26,11 @@ export class MachineService {
     return this.databaseService.get(`apps/${appId}`);
   }
 
-  async installApp(template: AppTemplate): Promise<void> {
+  async installApp(template: AppTemplate): Promise<string> {
     const app = new MachineApp(uuid.v4(), template);
     await this.databaseService.update(`apps/` + app.id, app);
     await this.dockerService.createContainer(app);
-  }
-
-  private async getContainerName(appId: string) {
-    const app = await this.getApp(appId);
-    return this.dockerService.getContainerName(app);
+    return app.id;
   }
 
   async stopApp(appId: string): Promise<void> {
