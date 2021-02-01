@@ -15,7 +15,7 @@ export class MachineService {
 
   private async getContainerName(appId: string) {
     const app = await this.getApp(appId);
-    return this.dockerService.getContainerName(app);
+    return app.container;
   }
 
   async getApps(): Promise<MachineApp[]> {
@@ -31,6 +31,7 @@ export class MachineService {
     const app = new MachineApp(uuid.v4(), template);
     await this.databaseService.update(`apps/` + app.id, app);
     await this.dockerService.createContainer(app);
+    await this.dockerService.startContainer(app.container);
     return app.id;
   }
 
