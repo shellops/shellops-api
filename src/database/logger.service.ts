@@ -8,7 +8,7 @@ export class LoggerService extends Logger {
     console['log'](message);
   }
   error(message: any, trace?: string, context?: string) {
-    console['error'](message);
+    console['error'](message, trace);
   }
   warn(message: any, context?: string) {
     console['warn'](message);
