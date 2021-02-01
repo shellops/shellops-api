@@ -20,7 +20,7 @@ export class MachineService {
 
   async getApps(): Promise<MachineApp[]> {
     const apps = await this.databaseService.get<MachineApp[]>('apps');
-    return apps || [];
+    return Object.values(apps);
   }
 
   async getApp(appId: string): Promise<MachineApp> {
