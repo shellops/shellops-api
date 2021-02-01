@@ -10,8 +10,6 @@ export class StoreService implements OnModuleInit {
   constructor(private readonly databaseService: DatabaseService) {}
 
   async onModuleInit() {
-    if (Config.mode !== 'API') return;
-
     for (const name in templates) {
       if (Object.prototype.hasOwnProperty.call(templates, name)) {
         const template = templates[name];
@@ -28,6 +26,8 @@ export class StoreService implements OnModuleInit {
   }
 
   public async getAppTemplates(): Promise<AppTemplate[]> {
-    return this.databaseService.get<AppTemplate[]>('store/app-templates');
+    return Object.values(
+      await this.databaseService.get<AppTemplate[]>('store/app-templates'),
+    );
   }
 }
