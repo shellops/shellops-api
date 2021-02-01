@@ -1,4 +1,4 @@
-import { MachineApp } from "../machine/machine-app.dto";
+import { MachineApp } from '../machine/machine-app.dto';
 
 export class AppTemplate {
   name: string;
@@ -30,12 +30,12 @@ export class AppTemplate {
     container: string;
   }[];
 
-  webPort?: number;
+  webPort?: string;
 
   ports: {
     type?: 'tcp' | 'udp';
-    host: number;
-    container: number;
+    host: string;
+    container: string;
   }[];
 
   dependencies?: MachineApp[];
