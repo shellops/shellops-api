@@ -10,14 +10,12 @@ import { MachineApp } from '../machine/machine-app.dto';
 export class DockerService {
   modem = new Modem({ socketPath: Config.dockerSocket });
 
-  public getContainerName({ name, id }: Partial<MachineApp>) {
-    return `${name.toLowerCase().replace(/\s/g, '-')}_${id || uuid()}`;
-  }
 
   public async createContainer(
     app: Partial<MachineApp>,
   ): Promise<{ Id: string }> {
-    const name = this.getContainerName(app);
+    
+    const name = app.container;
 
     const container: Partial<Docker.Container> = {
       Image: app.image,
@@ -30,7 +28,7 @@ export class DockerService {
           (item) => `${item.host}:${item.container}`,
         ),
         RestartPolicy: { Name: 'always' },
-        PortBindings: app.ports.reduce<any>(
+        PortBindings: app.ports?.reduce<any>(
           (memo: any, curr) => ({
             ...memo,
             [`${curr.container}/${curr.type || 'tcp'}`]: [
