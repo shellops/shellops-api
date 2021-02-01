@@ -15,7 +15,7 @@ import { SysinfoService } from './sysinfo.service';
 export class SysinfoController {
   constructor(private readonly sysInfoService: SysinfoService) {}
 
-  @Get('/api/v1/sysinfo/:node/docker')
+  @Get('/api/v1/sysinfo/docker')
   async docker() {
     return this.sysInfoService.docker();
   }
