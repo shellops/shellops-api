@@ -1,20 +1,61 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import * as Modem from 'docker-modem';
+import { watch } from 'fs-extra';
 import { Stream } from 'stream';
-import { v4 as uuid } from 'uuid';
 
 import { Config } from '../config';
 import { MachineApp } from '../machine/machine-app.dto';
+import { WsGateway } from '../ws/ws.gateway';
 
 @Injectable()
-export class DockerService {
+export class DockerService implements OnModuleInit, OnModuleDestroy {
   modem = new Modem({ socketPath: Config.dockerSocket });
+  watchList: string[] = [];
+  watchStreams: Stream[] = [];
+  constructor(private readonly wsGateway: WsGateway) { }
 
+  onModuleInit() {
+    this.statsWatchListUpdater();
+  }
+
+  async onModuleDestroy() {
+    for (const stream of this.watchStreams) {
+      stream.removeAllListeners();
+    }
+  }
+
+  async statsWatchListUpdater() {
+    const containers = await this.containers();
+
+    containers
+      .filter((p) => !this.watchList.includes(p.Id))
+      .forEach((container) => {
+        this.watchList.push(container.Id);
+
+        this.containerStats(container.Id).then((stream) => {
+          this.watchStreams.push(stream);
+          stream.on('data', async (chunk) => {
+            const stats = JSON.parse(String(chunk));
+            const info = await this.containerInfo(
+              container.Id,
+            );
+            this.wsGateway.broadcast(
+              JSON.stringify({
+                type: 'CONTAINER_STATS',
+                payload: { container: info, stats },
+              }),
+            );
+          });
+        });
+      });
+    setTimeout(() => {
+      this.statsWatchListUpdater();
+    }, 5000);
+  }
 
   public async createContainer(
     app: Partial<MachineApp>,
   ): Promise<{ Id: string }> {
-    
     const name = app.container;
 
     const container: Partial<Docker.Container> = {
@@ -155,8 +196,9 @@ export class DockerService {
   public async containerInfo(containerId: string): Promise<Docker.Container> {
     const call = {
       path: `/containers/${containerId}/json?`,
-      method: 'POST',
+      method: 'GET',
       statusCodes: {
+        200: true,
         204: true,
         304: true,
         404: 'no such container',
@@ -172,14 +214,36 @@ export class DockerService {
     });
   }
 
+  public async containerStats(containerId: string): Promise<Stream> {
+    const call = {
+      path: `/containers/${containerId}/stats?`,
+      method: 'GET',
+      isStream: true,
+      statusCodes: {
+        200: true,
+        404: 'no such container',
+        500: 'server error',
+      },
+    };
+
+    return new Promise<any>((resolve, reject) => {
+      this.modem.dial(call, (err, stream: Stream) => {
+        if (err) return reject(err);
+
+        resolve(stream);
+      });
+    });
+  }
+
   /**
    * Get machine containers
    */
   public async containers(): Promise<Docker.Container[]> {
     const call = {
       path: `/containers/json?`,
-      method: 'POST',
+      method: 'GET',
       statusCodes: {
+        200: true,
         204: true,
         304: true,
         500: 'server error',
@@ -200,8 +264,9 @@ export class DockerService {
   public async images(): Promise<Docker.Image[]> {
     const call = {
       path: `/images/json?`,
-      method: 'POST',
+      method: 'GET',
       statusCodes: {
+        200: true,
         204: true,
         304: true,
         500: 'server error',
