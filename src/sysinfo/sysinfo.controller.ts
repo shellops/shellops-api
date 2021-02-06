@@ -8,33 +8,33 @@ import { ApiGuard } from '../api.guard';
 import { Config } from '../config';
 import { SysinfoService } from './sysinfo.service';
 
-@Controller()
+@Controller('v1/sysinfo')
 @ApiTags('SysInfo')
 @ApiBasicAuth()
 @UseGuards(ApiGuard)
 export class SysinfoController {
   constructor(private readonly sysInfoService: SysinfoService) {}
-  @Get('v1/sysinfo/docker')
+  @Get('docker')
   async docker() {
     return this.sysInfoService.docker();
   }
 
-  @Get('v1/sysinfo/general')
+  @Get('general')
   async general() {
     return this.sysInfoService.general();
   }
 
-  @Get('v1/sysinfo/ip')
+  @Get('ip')
   async ip() {
     return this.sysInfoService.ip();
   }
 
-  @Get('v1/sysinfo/geo-ip')
+  @Get('geo-ip')
   async geoIp() {
     return this.sysInfoService.geoIp();
   }
 
-  @Get('v1/sysinfo/location.svg')
+  @Get('location.svg')
   async geoMap(@Res() res: Response) {
     const { lon, lat } = await this.sysInfoService.geoIp();
 

@@ -4,7 +4,7 @@ import { ApiBasicAuth, ApiParam, ApiTags } from '@nestjs/swagger';
 import { ApiGuard } from '../api.guard';
 import { DockerService } from './docker.service';
 
-@Controller()
+@Controller('v1/docker')
 @ApiTags('Docker')
 @ApiBasicAuth()
 @UseGuards(ApiGuard)
@@ -12,35 +12,35 @@ export class DockerController {
   constructor(private readonly dockerService: DockerService) {}
 
 
-  @Get('v1/docker/containers')
+  @Get('containers')
   list() {
     return this.dockerService.containers();
   }
 
   
-  @Get('v1/docker/containers/:containerId')
+  @Get('containers/:containerId')
   @ApiParam({ name: 'containerId' })
   inspect(@Param('containerId') containerId: string) {
     return this.dockerService.containerInfo(containerId);
   }
 
-  @Delete('v1/docker/containers/:containerId')
+  @Delete('containers/:containerId')
   @ApiParam({ name: 'containerId' })
   remove(@Param('containerId') containerId: string) {
     return this.dockerService.removeContainer(containerId);
   }
 
-  @Post('v1/docker/containers/:containerId/start')
+  @Post('containers/:containerId/start')
   start(@Param('containerId') containerId: string) {
     return this.dockerService.startContainer(containerId);
   }
 
-  @Post('v1/docker/containers/:containerId/stop')
+  @Post('containers/:containerId/stop')
   stop(@Param('containerId') containerId: string) {
     return this.dockerService.stopContainer(containerId);
   }
 
-  @Post('v1/docker/containers/:containerId/restart')
+  @Post('containers/:containerId/restart')
   restart(@Param('containerId') containerId: string) {
     return this.dockerService.restartContainer(containerId);
   }
