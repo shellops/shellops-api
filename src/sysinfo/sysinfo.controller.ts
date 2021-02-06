@@ -14,28 +14,27 @@ import { SysinfoService } from './sysinfo.service';
 @UseGuards(ApiGuard)
 export class SysinfoController {
   constructor(private readonly sysInfoService: SysinfoService) {}
-
-  @Get('/api/v1/sysinfo/docker')
+  @Get('v1/sysinfo/docker')
   async docker() {
     return this.sysInfoService.docker();
   }
 
-  @Get('/api/v1/sysinfo/general')
+  @Get('v1/sysinfo/general')
   async general() {
     return this.sysInfoService.general();
   }
 
-  @Get('/api/v1/sysinfo/ip')
+  @Get('v1/sysinfo/ip')
   async ip() {
     return this.sysInfoService.ip();
   }
 
-  @Get('/api/v1/sysinfo/geo-ip')
+  @Get('v1/sysinfo/geo-ip')
   async geoIp() {
     return this.sysInfoService.geoIp();
   }
 
-  @Get('/api/v1/sysinfo/location.svg')
+  @Get('v1/sysinfo/location.svg')
   async geoMap(@Res() res: Response) {
     const { lon, lat } = await this.sysInfoService.geoIp();
 

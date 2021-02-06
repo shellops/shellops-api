@@ -27,6 +27,8 @@ export async function bootstrap() {
     logger: ['error', 'warn', 'verbose'],
   });
 
+  app.setGlobalPrefix('api'); // make all routes in api
+
   app.useLogger(app.get(LoggerService));
   app.useWebSocketAdapter(new WsAdapter(app) as any);
 

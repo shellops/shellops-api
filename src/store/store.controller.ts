@@ -9,7 +9,7 @@ import { StoreService } from './store.service';
 export class StoreController {
   constructor(private readonly storeService: StoreService) {}
 
-  @Get('/api/v1/store/app-templates')
+  @Get('v1/store/app-templates')
   @ApiBody({ type: AppTemplate, isArray: true })
   getAppTemplates() {
     return this.storeService.getAppTemplates();

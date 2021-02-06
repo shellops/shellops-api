@@ -12,7 +12,7 @@ import { UserLimitDto } from './user-limit.dto';
 export class FinancialController {
   constructor(private readonly financialService: FinancialService) {}
 
-  @Get('/api/v1/financial/limits')
+  @Get('v1/financial/limits')
   @ApiResponse({ type: UserLimitDto })
   getLimits(@Req() { user: { uid } }: AuthenticatedRequest) {
     return this.financialService.checkUserLimit(uid);
