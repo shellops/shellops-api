@@ -6,7 +6,7 @@ export const postgres = {
     'PostgreSQL, often simply "Postgres", is an object-relational database management system (ORDBMS) with an emphasis on extensibility and standards-compliance.',
   image: 'postgres:9.6',
   version: '9.6',
-  logo: '/assets/logos/postgresql-original.svg',
+  logo: '/logos/postgresql-original.svg',
   ports: [{ host: '{{ RANDOM_PORT }}', container: '5432' }],
   variables: [
     {

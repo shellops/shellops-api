@@ -6,7 +6,7 @@ export const mysql = {
     "MySQL is the world's most popular open source database. With its proven performance, reliability and ease-of-use, MySQL has become the leading database choice for web-based applications",
   image: 'mysql:5.6',
   version: '5.6',
-  logo: '/assets/logos/mysql-original.svg',
+  logo: '/logos/mysql-original.svg',
   ports: [{ host: '{{ RANDOM_PORT }}', container: '3306' }],
   variables: [
     {

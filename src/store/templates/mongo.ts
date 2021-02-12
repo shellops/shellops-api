@@ -6,7 +6,7 @@ export const mongo = {
   description:
     'MongoDB is a free and open-source cross-platform document-oriented database program. Classified as a NoSQL database program, MongoDB uses JSON-like documents with schemata.',
   image: 'mongo:4.2',
-  logo: '/assets/logos/mongodb-original.svg',
+  logo: '/logos/mongodb-original.svg',
   ports: [{ host: '{{ RANDOM_PORT }}', container: '27017' }],
   variables: [
     {
