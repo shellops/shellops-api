@@ -8,6 +8,7 @@ import { MachineModule } from './machine/machine.module';
 import { StoreModule } from './store/store.module';
 import { SysinfoModule } from './sysinfo/sysinfo.module';
 import { WsModule } from './ws/ws.module';
+import { AppService } from './app/app.service';
 
 @Module({
   imports: [
@@ -20,6 +21,6 @@ import { WsModule } from './ws/ws.module';
     DatabaseModule,
   ],
   controllers: [AppController],
-  providers: [],
+  providers: [AppService ],
 })
-export class AppModule {}
+export class AppModule { }
