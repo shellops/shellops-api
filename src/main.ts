@@ -25,7 +25,7 @@ process.on('uncaughtException', (e: Error) => {
 
 export async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    cors: true,
+    cors: false,
     logger: ['error', 'warn', 'verbose'],
   });
 
