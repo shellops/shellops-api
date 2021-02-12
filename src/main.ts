@@ -23,7 +23,23 @@ process.on('uncaughtException', (e: Error) => {
   Logger.error('uncaughtException: ' + e.message, e.stack);
 });
 
+async function getOpenPort() {
+  const db = new DatabaseService();
+
+  const dbPort: number = await db.get('app.port');
+  const availablePort = await getPort({ port: dbPort || Config.port });
+
+
+  if (dbPort !== availablePort && availablePort !== Config.port)
+    new DatabaseService().update('app.port', availablePort);
+
+  return availablePort;
+}
+
 export async function bootstrap() {
+
+  Config.port = await getOpenPort();
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
     cors: false,
     logger: ['error', 'warn', 'verbose'],
@@ -42,15 +58,7 @@ export async function bootstrap() {
 
   await app.init();
 
-  const db = new DatabaseService();
-
-  const dbPort: number = await db.get('app.port');
-  const availablePort = await getPort({ port: dbPort || Config.port });
-
-  if (dbPort !== availablePort && availablePort !== Config.port)
-    new DatabaseService().update('app.port', availablePort);
-
-  await app.listen(availablePort, Config.host);
+  await app.listen(Config.port, Config.host);
 
   app
     .get(LoggerService)
