@@ -50,7 +50,7 @@ export class DockerService implements OnModuleInit, OnModuleDestroy {
       });
     setTimeout(() => {
       this.statsWatchListUpdater();
-    }, 5000);
+    }, 10000);
   }
 
   public async createContainer(
@@ -240,7 +240,7 @@ export class DockerService implements OnModuleInit, OnModuleDestroy {
    */
   public async containers(): Promise<Docker.Container[]> {
     const call = {
-      path: `/containers/json?`,
+      path: `/containers/json?all=true`,
       method: 'GET',
       statusCodes: {
         200: true,
