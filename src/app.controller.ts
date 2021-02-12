@@ -5,7 +5,7 @@ import { Response } from 'express';
 @Controller()
 @ApiTags('App')
 export class AppController {
-  @Get('/api')
+  @Get()
   @ApiOperation({ summary: 'Redirect to swagger' })
   redirectToSwagger(@Res() res: Response) {
     res.redirect('/swagger');
