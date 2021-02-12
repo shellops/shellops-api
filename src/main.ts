@@ -6,11 +6,13 @@ import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { WsAdapter } from '@nestjs/platform-ws';
 import * as chalk from 'chalk';
+import * as getPort from 'get-port';
 import { join } from 'path';
 
 import { AppModule } from './app.module';
 import { Config } from './config';
 import { configureMiddlewares } from './configure-middlewares';
+import { DatabaseService } from './database/database.service';
 import { LoggerService } from './database/logger.service';
 
 process.on('unhandledRejection', (e: Error) => {
@@ -40,19 +42,27 @@ export async function bootstrap() {
 
   await app.init();
 
-  await app.listen(Config.port, Config.host);
+  const db = new DatabaseService();
+
+  const dbPort: number = await db.get('app.port');
+  const availablePort = await getPort({ port: dbPort || Config.port });
+
+  if (dbPort !== availablePort && availablePort !== Config.port)
+    new DatabaseService().update('app.port', availablePort);
+
+  await app.listen(availablePort, Config.host);
 
   app
     .get(LoggerService)
     .verbose(
       chalk.bgBlack.greenBright`\nENV: ` +
-        chalk.yellow`${Config.env}` +
-        chalk.bgBlack.greenBright`\nMODE: ` +
-        chalk.yellow`${Config.mode}` +
-        chalk.bgBlack.greenBright`\nSWAGGER: ` +
-        chalk.yellow`${await app.getUrl()}/swagger` +
-        chalk.bgBlack.greenBright`\nSOCKET: ` +
-        chalk.yellow`${Config.dockerSocket}`,
+      chalk.yellow`${Config.env}` +
+      chalk.bgBlack.greenBright`\nMODE: ` +
+      chalk.yellow`${Config.mode}` +
+      chalk.bgBlack.greenBright`\nSWAGGER: ` +
+      chalk.yellow`${await app.getUrl()}/swagger` +
+      chalk.bgBlack.greenBright`\nSOCKET: ` +
+      chalk.yellow`${Config.dockerSocket}`,
     );
 }
 

@@ -23,7 +23,7 @@ export class DatabaseService {
     path = path.replace(/\//g, '.');
     if (this.firebase) await this.firebase.database().ref(path).update(update);
     else {
-      _.set(this.json, path, _.extend(this.get(path), update));
+      _.set(this.json, path, typeof update === 'object' ? _.extend(this.get(path), update) : update);
 
       writeJsonSync(this.jsonPath, this.json, { spaces: 2 });
     }
