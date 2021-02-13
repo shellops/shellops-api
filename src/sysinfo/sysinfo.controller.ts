@@ -1,11 +1,7 @@
-import { Controller, Get, Res, UseGuards } from '@nestjs/common';
+import { Controller, Get, UseGuards } from '@nestjs/common';
 import { ApiBasicAuth, ApiTags } from '@nestjs/swagger';
-import { Response } from 'express';
-import * as svgMap from 'svg-world-map';
-import * as domStringify from 'virtual-dom-stringify';
-import { ApiGuard } from '../api.guard';
 
-import { Config } from '../config';
+import { ApiGuard } from '../api.guard';
 import { SysinfoService } from './sysinfo.service';
 
 @Controller('v1/sysinfo')
@@ -34,14 +30,4 @@ export class SysinfoController {
     return this.sysInfoService.geoIp();
   }
 
-  @Get('location.svg')
-  async geoMap(@Res() res: Response) {
-    const { lon, lat } = await this.sysInfoService.geoIp();
-
-    res.setHeader('Content-Type', 'image/svg+xml');
-
-    const map = svgMap(lon, lat, Config.locationMap);
-
-    res.end(domStringify(map));
-  }
 }

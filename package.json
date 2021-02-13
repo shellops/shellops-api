@@ -45,17 +45,13 @@
     "lodash": "^4.17.20",
     "mustache": "^4.1.0",
     "node-fetch": "^2.6.1",
-    "node-ssh": "^11.1.1",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
     "rxjs": "^6.6.3",
     "source-map-support": "^0.5.19",
-    "svg-world-map": "^1.0.1",
     "swagger-ui-express": "^4.1.6",
     "systeminformation": "^4.34.7",
-    "tunnel-ssh": "^4.1.4",
     "uuid": "^8.3.2",
-    "virtual-dom-stringify": "^3.0.1",
     "ws": "^7.4.2"
   },
   "devDependencies": {

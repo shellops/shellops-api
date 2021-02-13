@@ -1,10 +1,10 @@
 #!/usr/bin/env node
+import * as chalk from 'chalk';
+import * as getPort from 'get-port';
 
-import { Logger } from "@nestjs/common";
-import * as chalk from "chalk";
-import * as getPort from "get-port";
-import { bootstrap } from "./bootstrap";
-import { LoggerService } from "./database/logger.service";
+import { bootstrap } from './bootstrap';
+import { LoggerService } from './database/logger.service';
+
 
 (async () => {
 
