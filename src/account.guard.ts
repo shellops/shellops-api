@@ -1,10 +1,8 @@
 import { CanActivate, ExecutionContext, Injectable, OnModuleInit, UnauthorizedException } from '@nestjs/common';
-import * as chalk from 'chalk';
 import * as firebaseAdmin from 'firebase-admin';
 
 import { AuthenticatedRequest } from './authenticated-request.interface';
 import { Config } from './config';
-import { LoggerService } from './database/logger.service';
 import { ENV } from './env.enum';
 
 /**
@@ -14,7 +12,6 @@ import { ENV } from './env.enum';
 export class AccountGuard implements CanActivate, OnModuleInit {
   firebaseApp: any;
 
-  constructor(private readonly loggerService: LoggerService) {}
   onModuleInit() {
     if (Config.env === ENV.TEST) return;
 
@@ -22,7 +19,7 @@ export class AccountGuard implements CanActivate, OnModuleInit {
       this.firebaseApp = firebaseAdmin.initializeApp({
         credential: firebaseAdmin.credential.cert(Config.firebase),
       });
-    else this.loggerService.warn(chalk.redBright`Firebase credentials were not provided`);
+
   }
 
   async canActivate(context: ExecutionContext): Promise<boolean> {

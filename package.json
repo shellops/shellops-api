@@ -1,6 +1,6 @@
 {
   "name": "shellops-api",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "Assists in managing Docker on your server",
   "repository": {
     "url": "https://github.com/shellops/shellops-api"
@@ -8,7 +8,7 @@
   "author": "Mohsen Esmaeili <m-esm@hotmail.com",
   "private": false,
   "license": "MIT",
-  "bin": "dist/main.js",
+  "bin": "dist/agent.js",
   "scripts": {
     "prebuild": "rimraf dist",
     "build": "nest build",
