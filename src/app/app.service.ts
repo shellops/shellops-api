@@ -1,9 +1,4 @@
-import {
-    CanActivate,
-    ExecutionContext,
-    Injectable,
-    OnApplicationBootstrap,
-} from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as chalk from 'chalk';
 import { randomBytes } from 'crypto';
 
@@ -24,11 +19,11 @@ export class AppService {
 
     public async getCredentials() {
         return this.databaseService.get<{
-          user: string;
-          pass: string;
+            user: string;
+            pass: string;
         }>('agent-auth');
-      }
-    
+    }
+
 
     async onApplicationBootstrap() {
         let auth = await this.getCredentials();
@@ -47,15 +42,15 @@ export class AppService {
             chalk.bold.greenBright
                 .bgBlack`\n\nUse following url to add your host on shellops.io/panel\n\n\t` +
             chalk.underline
-                .yellow`http://${auth.user}:${auth.pass}@${publicIp}:${Config.port}\n` +
+                .yellow`http://${auth.user}:${auth.pass}@${publicIp.replace(/\./g, '-')}.ip.shellops.link\n` +
             (Config.env === ENV.DEVELOPMENT
                 ? `\n\t\tOR\n\n` +
                 chalk.underline
                     .yellow`\thttp://${auth.user}:${auth.pass}@localhost:${Config.port}\n`
                 : '') +
-            chalk.bgBlack.greenBright`\n\tUSER: ` +
+            chalk.bgBlack.greenBright`\n\tAGENT ID: ` +
             chalk.yellow`${auth.user}` +
-            chalk.bgBlack.greenBright`\n\tPASS: ` +
+            chalk.bgBlack.greenBright`\n\tAGENT SECRET: ` +
             chalk.yellow`${auth.pass}` ,
         );
     }
