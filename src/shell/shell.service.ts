@@ -205,6 +205,7 @@ export class ShellService implements OnModuleInit {
                 'docker run -d --name shellops-agent --restart always',
                 `-w /code`,
                 `-v ${join(__dirname, '../../')}:/code`,
+                `-v /var/run/docker.sock:/var/run/docker.sock`,
                 '-l traefik.backend=shellops-agent',
                 '-l traefik.docker.network=bridge',
                 '-l traefik.enable=true',
