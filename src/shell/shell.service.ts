@@ -184,7 +184,7 @@ export class ShellService implements OnModuleInit {
                 '-l traefik.backend=traefik',
                 '-l traefik.docker.network=bridge',
                 '-l traefik.enable=true',
-                '-l traefik.frontend.entryPoints=http,https',
+                '-l traefik.frontend.entryPoints=http',
                 '-l traefik.frontend.rule=Host:traefik.' + ipSubdomain,
                 '-l traefik.port=8080',
                 'traefik:v1.7.16'
@@ -192,7 +192,6 @@ export class ShellService implements OnModuleInit {
     }
 
     async installClient() {
-
 
         const ipSubdomain = await this.sysInfoService.ipSubdomain();
 
@@ -209,8 +208,8 @@ export class ShellService implements OnModuleInit {
                 '-l traefik.backend=shellops-agent',
                 '-l traefik.docker.network=bridge',
                 '-l traefik.enable=true',
-                '-l traefik.frontend.entryPoints=http,https',
-                '-l traefik.frontend.rule=Host:' + ipSubdomain,
+                '-l traefik.frontend.entryPoints=http',
+                `-l traefik.frontend.rule=Host:${ipSubdomain},www.${ipSubdomain}`,
                 '-l traefik.port=3000',
                 'node:alpine',
                 'node dist/main.js'
@@ -218,6 +217,8 @@ export class ShellService implements OnModuleInit {
     }
 
     async runCommand(command: string): Promise<string> {
+
+        this.loggerService.verbose('\n\n' + command + '\n\n');
 
         const result = await new Promise<string>((resolve, reject) => {
             exec(command, (err, stdOut, stdErr) => {
