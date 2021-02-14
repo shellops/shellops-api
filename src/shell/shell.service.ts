@@ -4,6 +4,7 @@ import { exec } from 'child_process';
 import { ensureDir, writeFile, writeJson } from 'fs-extra';
 import * as getPort from 'get-port';
 import { join } from 'path';
+import { AppService } from '../app/app.service';
 import { Config } from '../config';
 
 import { LoggerService } from '../database/logger.service';
@@ -15,6 +16,7 @@ export class ShellService implements OnModuleInit {
 
     constructor(
         public readonly loggerService: LoggerService,
+        public readonly appService: AppService,
         public readonly sysInfoService: SysinfoService) {
 
     }
@@ -45,7 +47,7 @@ export class ShellService implements OnModuleInit {
 
         await this.installClient();
 
-        this.loggerService.error('Shellops agent is installed on Docker and ready to use with above credentials. ( Copy and paste to panel.shellops.io ) ')
+        this.loggerService.log(chalk.greenBright.bgBlack`\n\nShellops agent is installed on Docker and ready to use with above credentials. Copy and URL to panel.shellops.io \n\n`)
 
         process.exit();
 
@@ -215,8 +217,6 @@ export class ShellService implements OnModuleInit {
     }
 
     async runCommand(command: string): Promise<string> {
-
-        Logger.verbose(`'${command}'`);
 
         const result = await new Promise<string>((resolve, reject) => {
             exec(command, (err, stdOut, stdErr) => {

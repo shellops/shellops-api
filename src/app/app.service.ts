@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import * as chalk from 'chalk';
 import { randomBytes } from 'crypto';
 
@@ -9,7 +9,7 @@ import { ENV } from '../env.enum';
 import { SysinfoService } from '../sysinfo/sysinfo.service';
 
 @Injectable()
-export class AppService {
+export class AppService implements OnModuleInit {
 
     constructor(
         private readonly databaseService: DatabaseService,
@@ -25,7 +25,7 @@ export class AppService {
     }
 
 
-    async onApplicationBootstrap() {
+    async onModuleInit() {
         let auth = await this.getCredentials();
 
         const ipSubdomain = await this.sysInfoService.ipSubdomain();
