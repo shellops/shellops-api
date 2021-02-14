@@ -47,7 +47,7 @@ export class ShellService implements OnModuleInit {
 
         await this.installClient();
 
-        this.loggerService.log(chalk.greenBright.bgBlack`\n\nShellops agent is installed on Docker and ready to use with above credentials. Copy and URL to panel.shellops.io \n\n`)
+        this.loggerService.log(chalk.greenBright.bgBlack`\n\nShellops agent is installed on Docker and ready to use. Copy and paste above URL to panel.shellops.io \n\n`)
 
         process.exit();
 
