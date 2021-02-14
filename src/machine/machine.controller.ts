@@ -21,7 +21,7 @@ import { MachineService } from './machine.service';
 export class MachineController {
   constructor(private readonly machineService: MachineService) {}
 
-  @Get('machine/apps')
+  @Get('apps')
   @ApiBody({ type: MachineApp, isArray: true })
   getApps() {
     return this.machineService.getApps();

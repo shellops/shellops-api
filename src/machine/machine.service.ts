@@ -11,7 +11,7 @@ export class MachineService {
   constructor(
     private readonly databaseService: DatabaseService,
     private readonly dockerService: DockerService,
-  ) {}
+  ) { }
 
   private async getContainerName(appId: string) {
     const app = await this.getApp(appId);
@@ -20,7 +20,7 @@ export class MachineService {
 
   async getApps(): Promise<MachineApp[]> {
     const apps = await this.databaseService.get<MachineApp[]>('apps');
-    return Object.values(apps);
+    return Object.values(apps || {});
   }
 
   async getApp(appId: string): Promise<MachineApp> {
