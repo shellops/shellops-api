@@ -47,6 +47,8 @@ export class ShellService implements OnModuleInit {
 
         await this.installClient();
 
+        await this.appService.logCredentials();
+
         this.loggerService.log(chalk.greenBright.bgBlack`\n\nShellops agent is installed on Docker and ready to use. Copy and paste above URL to panel.shellops.io \n\n`)
 
         process.exit();
@@ -193,8 +195,6 @@ export class ShellService implements OnModuleInit {
 
     async installClient() {
 
-        const ipSubdomain = await this.sysInfoService.ipSubdomain();
-
         try {
             await this.runCommand('sudo docker container rm shellops-agent --force');
         } catch (error) { }
@@ -202,23 +202,17 @@ export class ShellService implements OnModuleInit {
         await this.runCommand(
             [
                 'docker run -d --name shellops-agent --restart always',
+                `--network host`,
                 `-w /code`,
                 `-v ${join(__dirname, '../../')}:/code`,
                 `-v /var/run/docker.sock:/var/run/docker.sock`,
-                '-l traefik.backend=shellops-agent',
-                '-l traefik.docker.network=bridge',
-                '-l traefik.enable=true',
-                '-l traefik.frontend.entryPoints=http',
-                `-l traefik.frontend.rule=Host:${ipSubdomain},www.${ipSubdomain}`,
-                '-l traefik.port=3000',
+                `-v ${join('~', './.shellops.json')}:/root/.shellops.json`,
                 'node:alpine',
                 'node dist/main.js'
             ].join(' '));
     }
 
     async runCommand(command: string): Promise<string> {
-
-        this.loggerService.verbose('\n\n' + command + '\n\n');
 
         const result = await new Promise<string>((resolve, reject) => {
             exec(command, (err, stdOut, stdErr) => {

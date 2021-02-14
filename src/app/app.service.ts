@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnApplicationBootstrap } from '@nestjs/common';
 import * as chalk from 'chalk';
 import { randomBytes } from 'crypto';
 
@@ -9,7 +9,7 @@ import { ENV } from '../env.enum';
 import { SysinfoService } from '../sysinfo/sysinfo.service';
 
 @Injectable()
-export class AppService implements OnModuleInit {
+export class AppService implements OnApplicationBootstrap {
 
     constructor(
         private readonly databaseService: DatabaseService,
@@ -24,11 +24,15 @@ export class AppService implements OnModuleInit {
         }>('agent-auth');
     }
 
+    async onApplicationBootstrap() {
+        await this.logCredentials();
+    }
 
-    async onModuleInit() {
+
+    async logCredentials() {
         let auth = await this.getCredentials();
 
-        const ipSubdomain = await this.sysInfoService.ipSubdomain();
+        const ip = await this.sysInfoService.ip();
 
         if (!auth) {
             auth = {
@@ -42,7 +46,7 @@ export class AppService implements OnModuleInit {
             chalk.bold.greenBright
                 .bgBlack`\n\nUse following url to add your host on shellops.io/panel\n\n\t` +
             chalk.underline
-                .yellow`https://${auth.user}:${auth.pass}@${ipSubdomain}\n` +
+                .yellow`http://${auth.user}:${auth.pass}@${ip}:${Config.port}\n` +
             (Config.env === ENV.DEVELOPMENT
                 ? `\n\t\tOR\n\n` +
                 chalk.underline
