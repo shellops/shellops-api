@@ -4,6 +4,7 @@ import fetch from 'node-fetch';
 
 @Injectable()
 export class SysinfoService {
+
   async general() {
     return {
       memories: await info.memLayout(),
@@ -29,6 +30,10 @@ export class SysinfoService {
     ).json();
 
     return { city, country, countryCode, isp, lat, lon, ip };
+  }
+
+  async ipSubdomain() {
+    return `${(await this.ip()).replace(/\./g, '-')}.ip.shellops.link`
   }
 
   async docker() {

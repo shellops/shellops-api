@@ -28,7 +28,7 @@ export class AppService {
     async onApplicationBootstrap() {
         let auth = await this.getCredentials();
 
-        const publicIp = await this.sysInfoService.ip();
+        const ipSubdomain = await this.sysInfoService.ipSubdomain();
 
         if (!auth) {
             auth = {
@@ -42,7 +42,7 @@ export class AppService {
             chalk.bold.greenBright
                 .bgBlack`\n\nUse following url to add your host on shellops.io/panel\n\n\t` +
             chalk.underline
-                .yellow`http://${auth.user}:${auth.pass}@${publicIp.replace(/\./g, '-')}.ip.shellops.link\n` +
+                .yellow`http://${auth.user}:${auth.pass}@${ipSubdomain}\n` +
             (Config.env === ENV.DEVELOPMENT
                 ? `\n\t\tOR\n\n` +
                 chalk.underline

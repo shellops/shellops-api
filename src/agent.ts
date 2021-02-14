@@ -3,16 +3,24 @@ import * as chalk from 'chalk';
 import * as getPort from 'get-port';
 
 import { bootstrap } from './bootstrap';
+import { Config } from './config';
 import { LoggerService } from './database/logger.service';
+import { ENV } from './env.enum';
+import { SysinfoService } from './sysinfo/sysinfo.service';
 
 
 (async () => {
 
-    process.env['ENV'] = 'production';
+    Config.env = process.env['ENV'] = ENV.PRODUCTION;
 
-    if (await getPort({ port: 80 }) !== 80) {
-        throw new Error('Please run as root user or use sudo, otherwise freeup port 80, Shellops Agent needs it to bind domains and create SSL certificates.')
-    }
+    Config.mode = 'AGENT';
+
+    const sys = await new SysinfoService().general();
+
+    if (!sys.os.distro.toLowerCase().includes('ubuntu'))
+        throw new Error(chalk.red(`\n\nWe are only supporting Ubuntu servers for now, please stay tuned for next version.`))
+
+
 
     await bootstrap();
 

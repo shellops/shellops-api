@@ -9,6 +9,7 @@ import { StoreModule } from './store/store.module';
 import { SysinfoModule } from './sysinfo/sysinfo.module';
 import { WsModule } from './ws/ws.module';
 import { AppService } from './app/app.service';
+import { ShellService } from './shell/shell.service';
 
 @Module({
   imports: [
@@ -21,6 +22,6 @@ import { AppService } from './app/app.service';
     DatabaseModule,
   ],
   controllers: [AppController],
-  providers: [AppService ],
+  providers: [AppService, ShellService ],
 })
 export class AppModule { }
