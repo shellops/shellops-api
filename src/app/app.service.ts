@@ -42,7 +42,7 @@ export class AppService {
             chalk.bold.greenBright
                 .bgBlack`\n\nUse following url to add your host on shellops.io/panel\n\n\t` +
             chalk.underline
-                .yellow`http://${auth.user}:${auth.pass}@${ipSubdomain}\n` +
+                .yellow`https://${auth.user}:${auth.pass}@${ipSubdomain}\n` +
             (Config.env === ENV.DEVELOPMENT
                 ? `\n\t\tOR\n\n` +
                 chalk.underline

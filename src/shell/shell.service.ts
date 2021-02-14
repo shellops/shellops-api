@@ -1,7 +1,7 @@
 import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import * as chalk from 'chalk';
 import { exec } from 'child_process';
-import { ensureDir, writeFile } from 'fs-extra';
+import { ensureDir, writeFile, writeJson } from 'fs-extra';
 import * as getPort from 'get-port';
 import { join } from 'path';
 import { Config } from '../config';
@@ -44,6 +44,10 @@ export class ShellService implements OnModuleInit {
         }
 
         await this.installClient();
+
+        this.loggerService.error('Shellops agent is installed on Docker and ready to use with above credentials. ( Copy and paste to panel.shellops.io ) ')
+
+        process.exit();
 
     }
 
@@ -138,8 +142,6 @@ export class ShellService implements OnModuleInit {
 
         const ipSubdomain = await this.sysInfoService.ipSubdomain();
 
-
-
         await ensureDir('/home/traefik');
 
         await writeFile('/home/traefik/traefik.toml',
@@ -164,6 +166,7 @@ export class ShellService implements OnModuleInit {
                 `entryPoint = "http"`,
             ].join('\n'));
 
+        await writeJson('/home/traefik/acme.json', {});
         await this.runCommand('chmod 600 /home/traefik/acme.json');
 
         await this.runCommand(
@@ -200,7 +203,7 @@ export class ShellService implements OnModuleInit {
                 'docker run -d --name shellops-agent --restart always',
                 `-w /code`,
                 `-v ${join(__dirname, '../../')}:/code`,
-                '-l traefik.backend=traefik',
+                '-l traefik.backend=shellops-agent',
                 '-l traefik.docker.network=bridge',
                 '-l traefik.enable=true',
                 '-l traefik.frontend.entryPoints=http,https',
