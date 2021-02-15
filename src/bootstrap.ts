@@ -40,10 +40,10 @@ export async function bootstrap() {
   Config.port = await getOpenPort();
 
   const app = await NestFactory.create<NestExpressApplication>(AppModule, {
-    cors: false,
     logger: ['error', 'warn', 'verbose'],
   });
 
+  app.enableCors();
   app.setGlobalPrefix('api'); // make all routes in api
 
   app.useLogger(app.get(LoggerService));
