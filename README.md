@@ -24,6 +24,9 @@ npm run dev
 
 ```
 
+## Shellops Panel
+
+![](https://github-readme-stats.char-al.vercel.app/api/pin/?username=shellops&repo=shellops-panel&theme=tokyonight&show_owner=true)
 
 ## We are just starting
 
