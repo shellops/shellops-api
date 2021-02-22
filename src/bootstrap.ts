@@ -35,11 +35,13 @@ async function getOpenPort() {
   return availablePort;
 }
 
+export let app: NestExpressApplication;
+
 export async function bootstrap() {
 
   Config.port = await getOpenPort();
 
-  const app = await NestFactory.create<NestExpressApplication>(AppModule, {
+  app = await NestFactory.create<NestExpressApplication>(AppModule, {
     logger: ['error', 'warn', 'verbose'],
   });
 
@@ -56,6 +58,11 @@ export async function bootstrap() {
   app.enableShutdownHooks();
 
   await app.init();
+
+
+  app.use('*', (request, response) => {
+    response.sendFile(join(__dirname, '../public/index.html'));
+  });
 
   await app.listen(Config.port, Config.host);
 
