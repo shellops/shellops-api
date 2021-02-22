@@ -49,13 +49,12 @@ export class AppService implements OnApplicationBootstrap {
         this.loggerService.verbose(
             chalk.bold.greenBright
                 .bgBlack`\n\nUse following url to add your host on the panel\n\n\t` +
-            (ip ? chalk.underline
-                .yellow`http://${auth.user}:${auth.pass}@${ip}:${Config.port}\n` : '') +
-            ((Config.env === ENV.DEVELOPMENT) || !ip
-                ? `\n\t\tOR\n\n` +
-                chalk.underline
-                    .yellow`\thttp://${auth.user}:${auth.pass}@localhost:${Config.port}\n`
-                : '') +
+            [
+                (ip ?
+                    chalk.underline.yellow`http://${auth.user}:${auth.pass}@${ip}:${Config.port}\n` : ''),
+                ((Config.env === ENV.DEVELOPMENT) || !ip ?
+                    chalk.underline.yellow`\thttp://${auth.user}:${auth.pass}@localhost:${Config.port}\n` : '')
+            ].filter(p => p).join(`\n\t\tOR\n\n`) +
             chalk.bgBlack.greenBright`\n\tAGENT ID: ` +
             chalk.yellow`${auth.user}` +
             chalk.bgBlack.greenBright`\n\tAGENT SECRET: ` +

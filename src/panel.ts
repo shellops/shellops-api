@@ -91,8 +91,8 @@ import { SysinfoService } from './sysinfo/sysinfo.service';
 
     if (Config.env === ENV.PRODUCTION)
         open(url);
-    else
-        logger.verbose(chalk.cyanBright('\nLOCAL PANEL:\n' + url+ '\n\n'));
+
+    logger.verbose(chalk.cyanBright('\nLOCAL PANEL:\n' + url + '\n\n'));
 
 })().catch((e) => {
     new LoggerService().verbose(chalk.red('\n\n' + e.message + '\n\n'));
