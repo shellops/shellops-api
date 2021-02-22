@@ -7,7 +7,7 @@ dotenv.config();
 export const Config: {
   [key: string]: any;
   env: ENV;
-  mode: 'API' | 'AGENT';
+  mode: 'API' | 'AGENT' | 'PANEL';
   host: string;
   port: number;
   dockerSocket: string;
@@ -18,7 +18,7 @@ export const Config: {
   };
 } = {
   env: ENV.DEVELOPMENT,
-  mode: 'API', // API or AGENT
+  mode: (process.env['MODE'] || '').toUpperCase() as any || 'API', // API or AGENT
   host: '0.0.0.0',
   port: Number(process.env['PORT']) || 3000,
   locationMap: {
