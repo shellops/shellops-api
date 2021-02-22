@@ -31,8 +31,12 @@ export class AppService implements OnApplicationBootstrap {
 
     async logCredentials() {
         let auth = await this.getCredentials();
-
-        const ip = await this.sysInfoService.ip();
+        let ip: string;
+        try {
+            ip = await this.sysInfoService.ip();
+        } catch (error) {
+            this.loggerService.error(error);
+        }
 
         if (!auth) {
             auth = {
@@ -44,10 +48,10 @@ export class AppService implements OnApplicationBootstrap {
 
         this.loggerService.verbose(
             chalk.bold.greenBright
-                .bgBlack`\n\nUse following url to add your host on shellops.io/panel\n\n\t` +
-            chalk.underline
-                .yellow`http://${auth.user}:${auth.pass}@${ip}:${Config.port}\n` +
-            (Config.env === ENV.DEVELOPMENT
+                .bgBlack`\n\nUse following url to add your host on the panel\n\n\t` +
+            (ip ? chalk.underline
+                .yellow`http://${auth.user}:${auth.pass}@${ip}:${Config.port}\n` : '') +
+            ((Config.env === ENV.DEVELOPMENT) || !ip
                 ? `\n\t\tOR\n\n` +
                 chalk.underline
                     .yellow`\thttp://${auth.user}:${auth.pass}@localhost:${Config.port}\n`
