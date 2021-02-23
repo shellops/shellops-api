@@ -22,12 +22,6 @@ import { SysinfoService } from './sysinfo/sysinfo.service';
 
     Config.mode = 'PANEL';
 
-    const sys = await new SysinfoService().general();
-
-    if (!sys.os.distro.toLowerCase().includes('ubuntu'))
-        throw new Error(chalk.red(`\n\nWe are only supporting Ubuntu servers for now, please stay tuned for next version.`))
-
-
     const panelZipPath = join(__dirname, '../panel.zip');
     const panelPath = join(__dirname, '../panel');
     const publicPath = join(__dirname, '../public');
