@@ -15,7 +15,7 @@ export class MachineService {
 
   private async getContainerName(appId: string) {
     const app = await this.getApp(appId);
-    return app.container;
+    return app?.container;
   }
 
   async getApps(): Promise<MachineApp[]> {
@@ -28,6 +28,12 @@ export class MachineService {
   }
 
   async installApp(template: AppTemplate): Promise<string> {
+
+    const images = await this.dockerService.images();
+
+    if (!images.find(p => p.RepoTags.includes(template.image)))
+      await this.dockerService.pullImage(template.image);
+
     const app = new MachineApp(uuid.v4(), template);
     await this.databaseService.update(`apps/` + app.id, app);
     await this.dockerService.createContainer(app);
@@ -52,6 +58,7 @@ export class MachineService {
 
   async uninstallApp(appId: string): Promise<void> {
     const container = await this.getContainerName(appId);
+    await this.dockerService.stopContainer(container);
     await this.dockerService.removeContainer(container);
     await this.databaseService.remove(`apps/${appId}`);
   }
