@@ -51,7 +51,6 @@ export async function bootstrap() {
   app.useLogger(app.get(LoggerService));
   app.useWebSocketAdapter(new WsAdapter(app) as any);
 
-  app.useStaticAssets(join(__dirname, '../public'));
 
   configureMiddlewares(app);
 
@@ -59,10 +58,13 @@ export async function bootstrap() {
 
   await app.init();
 
+  if (Config.mode === 'PANEL') {
+    app.useStaticAssets(join(__dirname, '../public'));
+    app.use('*', (request, response) => {
+      response.sendFile(join(__dirname, '../public/index.html'));
+    });
+  }
 
-  app.use('*', (request, response) => {
-    response.sendFile(join(__dirname, '../public/index.html'));
-  });
 
   await app.listen(Config.port, Config.host);
 

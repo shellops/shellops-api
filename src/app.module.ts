@@ -1,5 +1,5 @@
-import { Module } from '@nestjs/common';
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
+import { ClassSerializerInterceptor, Module, ValidationPipe } from '@nestjs/common';
+import { APP_FILTER, APP_INTERCEPTOR, APP_PIPE } from '@nestjs/core';
 
 import { AppController } from './app.controller';
 import { AppService } from './app/app.service';
@@ -26,8 +26,23 @@ import { WsModule } from './ws/ws.module';
   ],
   controllers: [AppController],
   providers: [AppService, ShellService,
+    { provide: APP_FILTER, useClass: HttpExceptionsFilter },
     { provide: APP_INTERCEPTOR, useClass: LoggingInterceptor },
-    { provide: APP_FILTER, useClass: HttpExceptionsFilter }
+    { provide: APP_INTERCEPTOR, useClass: ClassSerializerInterceptor },
+    {
+      provide: APP_PIPE, useValue: new ValidationPipe({
+        transform: true,
+        forbidUnknownValues: true,
+        forbidNonWhitelisted: true,
+        whitelist: true,
+        transformOptions: {
+          excludeExtraneousValues: true,
+          excludePrefixes: ['__'],
+          enableImplicitConversion: true,
+          enableCircularCheck: true,
+        },
+      })
+    },
   ],
 })
 export class AppModule { }
