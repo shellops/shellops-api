@@ -1,15 +1,7 @@
-import {
-  Body,
-  Controller,
-  Delete,
-  Get,
-  Param,
-  Post,
-  UseGuards,
-} from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiBasicAuth, ApiBody, ApiParam, ApiResponse, ApiTags } from '@nestjs/swagger';
-import { ApiGuard } from '../api.guard';
 
+import { ApiGuard } from '../api.guard';
 import { AppTemplate } from '../store/app-template.dto';
 import { MachineApp } from './machine-app.dto';
 import { MachineService } from './machine.service';
@@ -50,7 +42,7 @@ export class MachineController {
   @ApiBody({ type: MachineApp, isArray: true })
   @ApiParam({ name: 'appId' })
   uninstallApp(@Param('appId') appId: string) {
-    return this.machineService.getApp(appId);
+    return this.machineService.uninstallApp(appId);
   }
 
   @Post('apps/:appId/start')
