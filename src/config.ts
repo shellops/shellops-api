@@ -1,4 +1,5 @@
 import * as dotenv from 'dotenv';
+import { join } from 'lodash';
 
 import { ENV } from './env.enum';
 
@@ -9,6 +10,7 @@ export const Config: {
   env: ENV;
   mode: 'API' | 'AGENT' | 'PANEL';
   host: string;
+  publicPath: string;
   port: number;
   dockerSocket: string;
   firebase?: {
@@ -20,6 +22,7 @@ export const Config: {
   env: ENV.DEVELOPMENT,
   mode: (process.env['MODE'] || '').toUpperCase() as any || 'API', // API or AGENT
   host: '0.0.0.0',
+  publicPath: join(__dirname, '../public'),
   port: Number(process.env['PORT']) || 3000,
   locationMap: {
     ocean: 'transparent', // color of the ocean

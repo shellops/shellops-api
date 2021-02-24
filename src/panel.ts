@@ -3,6 +3,7 @@ import * as chalk from 'chalk';
 import * as fs from 'fs-extra';
 import fetch from 'node-fetch';
 import * as open from 'open';
+import { homedir } from 'os';
 import { join } from 'path';
 import * as unzipper from 'unzipper';
 
@@ -11,7 +12,6 @@ import { app, bootstrap } from './bootstrap';
 import { Config } from './config';
 import { LoggerService } from './database/logger.service';
 import { ENV } from './env.enum';
-import { SysinfoService } from './sysinfo/sysinfo.service';
 
 (async () => {
 
@@ -22,9 +22,11 @@ import { SysinfoService } from './sysinfo/sysinfo.service';
 
     Config.mode = 'PANEL';
 
-    const panelZipPath = join(__dirname, '../panel.zip');
-    const panelPath = join(__dirname, '../panel');
-    const publicPath = join(__dirname, '../public');
+    const panelZipPath = join(homedir(), '.shellops/panel.zip');
+    const panelPath = join(homedir(), '.shellops/panel');
+    const publicPath = join(homedir(), '.shellops/public');
+
+    Config.publicPath = publicPath;
 
     fs.ensureDirSync(panelPath);
     fs.ensureDirSync(publicPath);
@@ -52,6 +54,8 @@ import { SysinfoService } from './sysinfo/sysinfo.service';
             fs.emptyDirSync(publicPath);
 
             logger.verbose(chalk.cyanBright(`Unziping panel.zip ...`));
+
+            fs.emptyDirSync(panelPath);
 
             const unzip = unzipper.Extract({ path: panelPath });
 

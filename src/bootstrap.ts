@@ -56,15 +56,16 @@ export async function bootstrap() {
 
   app.enableShutdownHooks();
 
-  await app.init();
 
   if (Config.mode === 'PANEL') {
-    app.useStaticAssets(join(__dirname, '../public'));
+
+    app.useStaticAssets(Config.publicPath);
     app.use('*', (request, response) => {
-      response.sendFile(join(__dirname, '../public/index.html'));
+      response.sendFile(join(Config.publicPath, 'index.html'));
     });
   }
 
+  await app.init();
 
   await app.listen(Config.port, Config.host);
 
