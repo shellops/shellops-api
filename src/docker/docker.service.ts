@@ -1,9 +1,9 @@
 import { Injectable, OnModuleDestroy, OnModuleInit } from '@nestjs/common';
 import * as Modem from 'docker-modem';
-import { watch } from 'fs-extra';
 import { Stream } from 'stream';
 
 import { Config } from '../config';
+import { LoggerService } from '../database/logger.service';
 import { MachineApp } from '../machine/machine-app.dto';
 import { WsGateway } from '../ws/ws.gateway';
 
@@ -12,7 +12,9 @@ export class DockerService implements OnModuleInit, OnModuleDestroy {
   modem = new Modem({ socketPath: Config.dockerSocket });
   watchList: string[] = [];
   watchStreams: Stream[] = [];
-  constructor(private readonly wsGateway: WsGateway) { }
+  constructor(
+    private readonly wsGateway: WsGateway,
+    private readonly loggerService: LoggerService) { }
 
   onModuleInit() {
     this.statsWatchListUpdater();
@@ -105,6 +107,9 @@ export class DockerService implements OnModuleInit, OnModuleDestroy {
   }
 
   public async removeContainer(containerId: string) {
+
+    await this.stopContainer(containerId);
+
     const call = {
       path: `/containers/${containerId}?`,
       method: 'DELETE',
@@ -302,7 +307,11 @@ export class DockerService implements OnModuleInit, OnModuleDestroy {
     return new Promise((resolve, reject) => {
       this.modem.dial(call, (err, stream: Stream) => {
         if (err) return reject(err);
-        resolve(stream);
+        stream.on('close', resolve);
+        stream.on('error', reject);
+        stream.on('data', (chunk) => {
+          this.loggerService.verbose(chunk.toString());
+        });
       });
     });
   }
